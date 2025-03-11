@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система отбора резюме</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>Система отбора резюме</h1>
+
+    <div class="container">
+        <!-- Левая панель: Форма фильтров -->
+        <div class="left-panel">
+            <h2>Фильтры</h2>
+            <form id="filter-form">
+                <div class="form-group">
+                    <label for="experience">Опыт работы (лет):</label>
+                    <input type="number" id="experience" name="experience" placeholder="Минимальный опыт">
+                </div>
+                <div class="form-group">
+                    <label for="education">Образование:</label>
+                    <select id="education" name="education">
+                        <option value="">Выберите уровень</option>
+                        <option value="high_school">Среднее</option>
+                        <option value="bachelor">Бакалавр</option>
+                        <option value="master">Магистр</option>
+                        <option value="phd">Доктор наук</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Уровень зарплаты (макс.):</label>
+                    <input type="number" id="salary" name="salary" placeholder="Максимальная зарплата">
+                </div>
+                <div class="form-group">
+                    <label for="skills">Ключевые навыки:</label>
+                    <input type="text" id="skills" name="skills" placeholder="Навыки через запятую">
+                </div>
+                <button type="submit">Применить фильтры</button>
+            </form>
+        </div>
+
+        <!-- Правая панель: Загрузка резюме и результаты -->
+        <div class="right-panel">
+            <h2>Загрузка резюме</h2>
+            <div class="upload-section">
+                <input type="file" id="resume-upload" multiple>
+                <div class="uploaded-files">
+                    <h3>Загруженные файлы:</h3>
+                    <ul id="uploaded-files-list">
+                        <!-- Список загруженных файлов будет здесь -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h2>Результаты отбора</h2>
+                <ul id="results-list">
+                    <!-- Результаты анализа будут здесь -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main_j.js"></script>
+</body>
+</html>
