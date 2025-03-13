@@ -33,6 +33,7 @@ async def main():
         await server.serve()
     except KeyboardInterrupt:
         print("Сервер остановлен")
+        print('lalala')
 
 if __name__ == "__main__":
     try:
