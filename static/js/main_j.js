@@ -1,35 +1,32 @@
 const fileInput = document.getElementById('resume-upload');
 const uploadedFilesList = document.getElementById('uploaded-files-list');
+const progressBar = document.getElementById('progress-bar');
 
 fileInput.addEventListener('change', (event) => {
     const files = event.target.files;
     if (files.length === 0) return;
 
-    // Очистка предыдущего списка
-    uploadedFilesList.innerHTML = '';
-
     // Проверка расширений файлов
-    const allowedExtensions = /(\.pdf)$/i; // Разрешены только PDF
+    const allowedExtensions = /(\.pdf)$/i;
     let hasInvalidFile = false;
-
     for (const file of files) {
         if (!allowedExtensions.exec(file.name)) {
-            alert(`Файл "${file.name}" не является PDF. Загрузка разрешена только для PDF.`);
+            alert(`Файл "${file.name}" не является PDF.`);
             hasInvalidFile = true;
-            fileInput.value = ''; // Сброс input
+            fileInput.value = '';
             break;
         }
     }
 
-    if (!hasInvalidFile) {
-        // Отображение выбранных файлов
-        for (const file of files) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `⮹ ${file.name}`;
-            uploadedFilesList.appendChild(listItem);
-        }
+    if (hasInvalidFile) return;
+
+    // Отображение выбранных файлов
+    uploadedFilesList.innerHTML = '';
+    for (const file of files) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `⮹ ${file.name}`;
+        uploadedFilesList.appendChild(listItem);
     }
-});
 
     // Настройка FormData
     const formData = new FormData();
@@ -68,14 +65,11 @@ fileInput.addEventListener('change', (event) => {
                 progressBar.style.width = '0%';
                 progressBar.textContent = '';
                 progressBar.style.backgroundColor = '#007bff';
+                alert('Загрузка завершена!');
             }, 2000);
         } else {
             progressBar.style.backgroundColor = '#ff0000';
-            setTimeout(() => {
-                progressBar.style.width = '0%';
-                progressBar.textContent = '';
-                progressBar.style.backgroundColor = '#007bff';
-            }, 2000);
+            alert('Ошибка загрузки!');
         }
     };
 
