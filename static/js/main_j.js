@@ -1,16 +1,85 @@
-// Обработка загрузки файлов
 const fileInput = document.getElementById('resume-upload');
 const uploadedFilesList = document.getElementById('uploaded-files-list');
 
 fileInput.addEventListener('change', (event) => {
     const files = event.target.files;
-    uploadedFilesList.innerHTML = ''; // Очистить список
+    if (files.length === 0) return;
+
+    // Очистка предыдущего списка
+    uploadedFilesList.innerHTML = '';
+
+    // Проверка расширений файлов
+    const allowedExtensions = /(\.pdf)$/i; // Разрешены только PDF
+    let hasInvalidFile = false;
 
     for (const file of files) {
-        const listItem = document.createElement('li');
-        listItem.textContent = file.name;
-        uploadedFilesList.appendChild(listItem);
+        if (!allowedExtensions.exec(file.name)) {
+            alert(`Файл "${file.name}" не является PDF. Загрузка разрешена только для PDF.`);
+            hasInvalidFile = true;
+            fileInput.value = ''; // Сброс input
+            break;
+        }
     }
+
+    if (!hasInvalidFile) {
+        // Отображение выбранных файлов
+        for (const file of files) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `⮹ ${file.name}`;
+            uploadedFilesList.appendChild(listItem);
+        }
+    }
+});
+
+    // Настройка FormData
+    const formData = new FormData();
+    for (const file of files) {
+        formData.append('files', file);
+    }
+
+    // Настройка XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/upload', true);
+
+    // Прогресс загрузки
+    xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+            const percent = (e.loaded / e.total * 100).toFixed(0);
+            progressBar.style.width = `${percent}%`;
+            progressBar.textContent = `${percent}%`;
+        }
+    };
+
+    // Обработка ответа
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            progressBar.style.backgroundColor = '#4CAF50';
+
+            // Отображение результатов
+            response.results.forEach(result => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${result.filename}: ${result.message}`;
+                listItem.style.color = result.status === 'success' ? 'green' : 'red';
+                uploadedFilesList.appendChild(listItem);
+            });
+
+            setTimeout(() => {
+                progressBar.style.width = '0%';
+                progressBar.textContent = '';
+                progressBar.style.backgroundColor = '#007bff';
+            }, 2000);
+        } else {
+            progressBar.style.backgroundColor = '#ff0000';
+            setTimeout(() => {
+                progressBar.style.width = '0%';
+                progressBar.textContent = '';
+                progressBar.style.backgroundColor = '#007bff';
+            }, 2000);
+        }
+    };
+
+    xhr.send(formData);
 });
 
 // Обработка формы фильтров

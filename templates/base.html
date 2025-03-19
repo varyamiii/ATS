@@ -43,13 +43,16 @@
         <!-- Правая панель: Загрузка резюме и результаты -->
         <div class="right-panel">
             <h2>Загрузка резюме</h2>
+            <!-- В секции загрузки файлов -->
             <div class="upload-section">
-                <input type="file" id="resume-upload" multiple>
+                <label for="resume-upload">Загрузите PDF-файлы:</label>
+                <input type="file" id="resume-upload" multiple accept=".pdf">
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
                 <div class="uploaded-files">
                     <h3>Загруженные файлы:</h3>
-                    <ul id="uploaded-files-list">
-                        <!-- Список загруженных файлов будет здесь -->
-                    </ul>
+                    <ul id="uploaded-files-list"></ul>
                 </div>
             </div>
 
