@@ -11,34 +11,140 @@
 
     <div class="container">
         <!-- Левая панель: Форма фильтров -->
-        <div class="left-panel">
-            <h2>Фильтры</h2>
-            <form id="filter-form">
-                <div class="form-group">
-                    <label for="experience">Опыт работы (лет):</label>
-                    <input type="number" id="experience" name="experience" placeholder="Минимальный опыт">
-                </div>
-                <div class="form-group">
-                    <label for="education">Образование:</label>
-                    <select id="education" name="education">
-                        <option value="">Выберите уровень</option>
-                        <option value="high_school">Среднее</option>
-                        <option value="bachelor">Бакалавр</option>
-                        <option value="master">Магистр</option>
-                        <option value="phd">Доктор наук</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="salary">Уровень зарплаты (макс.):</label>
-                    <input type="number" id="salary" name="salary" placeholder="Максимальная зарплата">
-                </div>
-                <div class="form-group">
-                    <label for="skills">Ключевые навыки:</label>
-                    <input type="text" id="skills" name="skills" placeholder="Навыки через запятую">
-                </div>
-                <button type="submit">Применить фильтры</button>
-            </form>
+<div class="left-panel">
+    <h2>Фильтры</h2>
+    <form id="filter-form">
+        <!-- Должность -->
+        <div class="form-group">
+            <label>Должность:</label>
+            <input type="text" id="position" placeholder="Введите должность">
         </div>
+
+        <!-- Тип занятости -->
+        <div class="form-group">
+            <label for="employment_type">Тип занятости:</label>
+            <select id="employment_type" name="employment_type">
+                <option value="">Выберите тип</option>
+                <option value="full">Полная занятость</option>
+                <option value="part">Частичная занятость</option>
+                <option value="project">Проектная деятельность</option>
+                <option value="internship">Стажировка</option>
+            </select>
+        </div>
+
+        <!-- Формат работы -->
+        <div class="form-group custom-dropdown">
+            <label>Формат работы:</label>
+            <div class="dropdown">
+                <button class="dropbtn" type="button">Выберите форматы</button>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" name="work_format" value="office"> Офис</label>
+                    <label><input type="checkbox" name="work_format" value="hybrid"> Гибрид</label>
+                    <label><input type="checkbox" name="work_format" value="remote"> Удаленка</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Образование -->
+        <div class="form-group custom-dropdown">
+            <label>Образование:</label>
+            <div class="dropdown">
+                <button class="dropbtn" type="button">Выберите уровни</button>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" name="education" value="higher_full"> Высшее полное</label>
+                    <label><input type="checkbox" name="education" value="higher"> Высшее</label>
+                    <label><input type="checkbox" name="education" value="secondary"> Среднее профессиональное</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Опыт работы -->
+        <div class="form-group">
+            <label>Опыт работы:</label>
+            <input type="text" id="experience" placeholder="Например: 3 года">
+        </div>
+
+        <!-- Скилы -->
+        <div class="form-group custom-dropdown">
+            <label>Ключевые навыки:</label>
+            <div class="dropdown">
+                <button class="dropbtn" type="button">Выберите навыки</button>
+                <div class="dropdown-content">
+                    <!-- Языки программирования -->
+                    <label><input type="checkbox" name="skills" value="python">Python</label>
+                    <label><input type="checkbox" name="skills" value="java">Java</label>
+                    <label><input type="checkbox" name="skills" value="javascript">JavaScript</label>
+                    <label><input type="checkbox" name="skills" value="cpp">C++</label>
+                    <label><input type="checkbox" name="skills" value="csharp">C#</label>
+                    <label><input type="checkbox" name="skills" value="php">PHP</label>
+                    <label><input type="checkbox" name="skills" value="ruby">Ruby</label>
+                    <label><input type="checkbox" name="skills" value="swift">Swift</label>
+                    <label><input type="checkbox" name="skills" value="kotlin">Kotlin</label>
+                    <label><input type="checkbox" name="skills" value="go">Go</label>
+                    <label><input type="checkbox" name="skills" value="rust">Rust</label>
+
+                    <!-- Фреймворки и библиотеки -->
+                    <label><input type="checkbox" name="skills" value="react">React</label>
+                    <label><input type="checkbox" name="skills" value="angular">Angular</label>
+                    <label><input type="checkbox" name="skills" value="vue">Vue.js</label>
+                    <label><input type="checkbox" name="skills" value="tensorflow">TensorFlow</label>
+                    <label><input type="checkbox" name="skills" value="pytorch">PyTorch</label>
+                    <label><input type="checkbox" name="skills" value="pandas">Pandas</label>
+                    <label><input type="checkbox" name="skills" value="numpy">NumPy</label>
+
+                    <!-- Базы данных -->
+                    <label><input type="checkbox" name="skills" value="sql">SQL</label>
+                    <label><input type="checkbox" name="skills" value="postgresql">PostgreSQL</label>
+                    <label><input type="checkbox" name="skills" value="mysql">MySQL</label>
+                    <label><input type="checkbox" name="skills" value="mongodb">MongoDB</label>
+                    <label><input type="checkbox" name="skills" value="nosql">NoSQL</label>
+
+                    <!-- Инфраструктура и инструменты -->
+                    <label><input type="checkbox" name="skills" value="docker">Docker</label>
+                    <label><input type="checkbox" name="skills" value="kubernetes">Kubernetes</label>
+                    <label><input type="checkbox" name="skills" value="aws">AWS</label>
+                    <label><input type="checkbox" name="skills" value="azure">Azure</label>
+                    <label><input type="checkbox" name="skills" value="gcp">Google Cloud</label>
+                    <label><input type="checkbox" name="skills" value="git">Git</label>
+                    <label><input type="checkbox" name="skills" value="linux">Linux</label>
+
+                    <!-- Дополнительные -->
+                    <label><input type="checkbox" name="skills" value="ml">ML</label>
+                    <label><input type="checkbox" name="skills" value="nlp">NLP</label>
+                    <label><input type="checkbox" name="skills" value="blockchain">Blockchain</label>
+                    <label><input type="checkbox" name="skills" value="devops">DevOps</label>
+                    <label><input type="checkbox" name="skills" value="api">API</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Уровень английского -->
+        <div class="form-group custom-dropdown">
+            <label>Уровень английского:</label>
+            <div class="dropdown">
+                <button class="dropbtn" type="button">Выберите уровни</button>
+                <div class="dropdown-content">
+                    <label><input type="checkbox" name="english_level" value="any"> Не важен</label>
+                    <label><input type="checkbox" name="english_level" value="a1"> A1</label>
+                    <label><input type="checkbox" name="english_level" value="a2"> A2</label>
+                    <label><input type="checkbox" name="english_level" value="b1"> B1</label>
+                    <label><input type="checkbox" name="english_level" value="b2"> B2</label>
+                    <label><input type="checkbox" name="english_level" value="c1"> C1</label>
+                    <label><input type="checkbox" name="english_level" value="c2"> C2</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Особые требования -->
+        <div class="form-group">
+            <label>Особые требования:</label>
+            <input type="text" id="special_requirements" placeholder="Дополнительные условия">
+        </div>
+
+        <button type="submit">Применить фильтры</button>
+        <button type="reset" id="reset-filters">Сброс</button>
+    </form>
+</div>
 
         <!-- Правая панель: Загрузка резюме и результаты -->
         <div class="right-panel">
