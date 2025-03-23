@@ -76,26 +76,53 @@ fileInput.addEventListener('change', (event) => {
     xhr.send(formData);
 });
 
-// Обработка формы фильтров
-const filterForm = document.getElementById('filter-form');
-const resultsList = document.getElementById('results-list');
+// Обработчик выпадающих списков
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menu = this.parentElement.querySelector('.dropdown-content');
+        menu.classList.toggle('show');
 
+        // Закрытие при клике вне
+        document.addEventListener('click', (e) => {
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+    });
+});
+
+// Обработчик формы
 filterForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    // Пример данных для демонстрации
-    const results = [
-        { name: 'Резюме 1', status: 'success', message: 'Соответствует фильтрам' },
-        { name: 'Резюме 2', status: 'error', message: 'Не соответствует (низкий опыт работы)' },
-        { name: 'Резюме 3', status: 'success', message: 'Соответствует фильтрам' },
-    ];
+    // Сбор данных из кастомных списков
+    const getChecked = (name) => {
+        return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
+                   .map(checkbox => checkbox.value);
+    };
 
-    resultsList.innerHTML = ''; // Очистить список
+    const filters = {
+        position: document.getElementById('position').value,
+        employment_type: document.getElementById('employment_type').value,
+        work_format: getChecked('work_format'),
+        education: getChecked('education'),
+        experience: document.getElementById('experience').value,
+        skills: getChecked('skills'),
+        english_level: getChecked('english_level'),
+        special_requirements: document.getElementById('special_requirements').value
+    };
 
-    results.forEach(result => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${result.name}: ${result.message}`;
-        listItem.className = result.status;
-        resultsList.appendChild(listItem);
+    console.log('Фильтры:', filters);
+    // Здесь добавьте отправку на сервер
+});
+
+// Сброс формы
+document.getElementById('reset-filters').addEventListener('click', () => {
+    document.querySelectorAll('.dropdown-content input').forEach(input => {
+        input.checked = false;
+    });
+    document.querySelectorAll('.dropbtn').forEach(btn => {
+        btn.textContent = 'Выберите';
     });
 });
