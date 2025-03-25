@@ -1,10 +1,17 @@
 # app/routes.py
-from fastapi import APIRouter, Request, File, UploadFile
+from fastapi import APIRouter, Request, File, UploadFile, Depends
 from fastapi.templating import Jinja2Templates
-from app.utils import extract_text_from_pdf
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.testing import db
+
+from app.utils import extract_text_from_pdf, save_text_to_json, parse_resume
 from app.models import process_embedding
 import os
 import json
+
+from database.base import get_db
+from database.request import add_candidate_to_db
+
 #------------------------Маршруты API
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -15,6 +22,7 @@ async def read_root(request: Request):
 
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
+    db: AsyncSession = Depends(get_db)
     results = []
     for file in files:
         # Проверка расширения файла
@@ -34,6 +42,16 @@ async def upload_files(files: list[UploadFile] = File(...)):
 
             # Извлечение текста
             text = extract_text_from_pdf(file_path)
+
+            # Сохранение текста в JSON
+            json_output_path = os.path.join("uploads", f"{os.path.splitext(file.filename)[0]}.json")
+            save_text_to_json(text, json_output_path)
+
+            blocks = parse_resume(text)
+            print(blocks)
+            # # Добавление кандидата в базу данных
+            # new_candidate = await add_candidate_to_db(db, blocks, text)
+
 
             # Создание эмбеддинга
             embedding_path = os.path.join("uploads", f"{file.filename}.json")
