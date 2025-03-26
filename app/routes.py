@@ -4,7 +4,10 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.testing import db
 
-from app.utils import extract_text_from_pdf, save_text_to_json, parse_resume
+from app.utils import extract_text_from_pdf, save_text_to_json, parse_resume, \
+    extract_entities, lemmatize_text, clean_text,tokenize_text,create_vector,\
+    extract_key_skills, process_contact_info, process_personal_info, process_education,\
+    process_skills
 from app.models import process_embedding
 import os
 import json
@@ -42,6 +45,14 @@ async def upload_files(files: list[UploadFile] = File(...)):
 
             # Извлечение текста
             text = extract_text_from_pdf(file_path)
+            # print("Извлеченный текст:", text[:500])
+            print("Сущности:", extract_entities(text))
+            # print("лема:", lemmatize_text(text))
+            # print("токены:", tokenize_text(text))
+            print("образование:", process_education(text))
+            print("навыки",extract_key_skills(text))
+            print("человек", process_personal_info(text))
+            print("навыки2.0", process_skills(text))
 
             # Сохранение текста в JSON
             json_output_path = os.path.join("uploads", f"{os.path.splitext(file.filename)[0]}.json")
@@ -71,5 +82,4 @@ async def upload_files(files: list[UploadFile] = File(...)):
                 "status": "error",
                 "message": f"Ошибка: {str(e)}"
             })
-
     return {"results": results}

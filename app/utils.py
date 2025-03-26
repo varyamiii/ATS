@@ -1,9 +1,71 @@
 from PyPDF2 import PdfReader
 import json
 import re
+from typing import Dict
 import spacy
+from typing import List
+from sentence_transformers import SentenceTransformer
 #-----------------------------Вспомогательные функции для работы с PDF.
+# Загрузка модели spaCy для русского языка
+nlp = spacy.load("ru_core_news_sm")
 
+# Инициализация модели SentenceTransformer
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+
+#Очистка текста: удаляет лишние символы и приводит к нижнему регистру
+def clean_text(text):
+    text = re.sub(r"[^\w\s]", "", text)  # Удаляем знаки препинания
+    text = text.lower()  # Приводим к нижнему регистру
+    return text
+
+#Токенизация текста (на слова)
+def tokenize_text(text):
+    doc = nlp(text)
+    tokens = [token.text for token in doc]
+    return tokens
+
+#Лемматизация текста: приводит слова к базовой форме
+def lemmatize_text(text):
+    doc = nlp(text)
+    lemmas = [token.lemma_ for token in doc]
+    return lemmas
+
+#Извлечение сущностей (NER) (компании, даты)
+def extract_entities(text):
+    doc = nlp(text)
+    entities = [(ent.text, ent.label_) for ent in doc.ents]
+    return entities
+
+#Создание векторного представления текста
+def create_vector(text):
+    vector = embedding_model.encode(text)
+    return vector
+#--------------------------------------------------------------------
+from typing import List
+
+SKILLS_KEYWORDS = [
+"sql", "java", "api", "python", "javascript", "html", "css", "react", "angular", "vue.js", "postgresql", "mysql", "mongodb", "машинное обучение", "глубокое обучение", "pandas", "numpy", "matplotlib", "hadoop", "spark", "aws", "azure", "google cloud", "docker", "kubernetes", "jenkins", "gitlab ci", "git", "devops", "unit testing", "selenium", "rest", "graphql", "linux", "микросервисы", "tensorflow", "pytorch", "алгоритмы", "структуры данных", "nosql", "apache airflow", "talend", "flutter", "swift", "kotlin", "c++", "c#", ".net", "php", "ruby", "bash", "powershell", "terraform", "ansible", "prometheus", "grafana", "kafka", "rabbitmq", "opencv", "computer vision", "natural language processing", "blockchain", "solidity", "rust", "go", "firebase", "elasticsearch", "kibana", "java", "python", "ruby", "php", "node.js", "c#", "go", "rust", "scala", "elixir", "spring", "django", "flask", "express.js", "ruby on rails", "asp.net core", "laravel", "oracle", "mariadb", "sqlite", "redis", "cassandra", "couchbase", "neo4j", "arangodb", "memcached", "varnish", "hazelcast", "rabbitmq", "apache kafka", "activemq", "zeromq", "nats", "event-driven architecture", "cqrs", "ddd", "hexagonal architecture", "grpc", "soap", "openapi", "swagger", "fastapi", "svelte", "ember.js", "backbone.js", "next.js", "nuxt.js", "gatsby", "tailwind css", "bootstrap", "foundation", "bulma", "materialize", "sass", "scss", "less", "stylus", "webpack", "vite", "rollup", "parcel", "babel", "d3.js", "three.js", "chart.js", "pixijs", "redux", "vuex", "zustand", "mobx", "recoil", "jest", "mocha", "chai", "cypress", "playwright", "storybook", "meteor.js", "nestjs", "adonisjs", "fastify", "yeoman", "hygen", "sentry", "logrocket", "datadog", "podman", "lxc", "lxd", "buildah", "nomad", "rancher", "circleci", "travis ci", "bitbucket pipelines", "spinnaker", "pulumi", "cloudformation", "cdk", "crossplane", "elk stack", "loki", "splunk", "new relic", "istio", "envoy", "traefik", "haproxy", "vault", "keycloak", "open policy agent", "scikit-learn", "xgboost", "lightgbm", "catboost", "statsmodels", "jax", "mxnet", "hugging face transformers", "fastai", "nltk", "spacy", "gensim", "textblob", "pil", "pillow", "albumentations", "detectron2", "flink", "hive", "impala", "presto", "drill", "seaborn", "plotly", "bokeh", "altair", "dash", "mlflow", "kubeflow", "tfx", "metaflow", "jetpack compose", "room", "retrofit", "dagger", "hilt", "swiftui", "combine", "coredata", "alamofire", "react native", "xamarin", "ionic", "capacitor", "appium", "espresso", "xctest", "unity", "unreal engine", "godot", "cryengine", "lumberyard", "c++", "c#", "lua", "gdscript", "physx", "bullet physics", "opengl", "directx", "vulkan", "photon", "mirror", "nakama", "blender", "maya", "3ds max", "houdini", "ethereum", "solana", "polkadot", "cardano", "avalanche", "polygon", "vyper", "clarity", "move", "truffle", "hardhat", "brownie", "foundry", "libsodium", "openssl", "bouncy castle", "uniswap sdk", "aave protocol", "compound finance", "erc-721", "erc-1155", "ipfs", "pinata", "burp suite", "owasp zap", "nikto", "nessus", "metasploit", "nmap", "wireshark", "hydra", "owasp dependency-check", "sonarqube", "qradar", "arcsight", "sentinelone", "thehive", "cortex", "misp", "lambda", "s3", "ec2", "rds", "dynamodb", "cloudfront", "ecs", "eks", "azure functions", "blob storage", "aks", "cosmos db", "logic apps", "cloud functions", "bigquery", "pub/sub", "kubernetes engine", "serverless framework", "aws sam", "google cloud run", "aws migration hub", "azure migrate", "google transfer appliance", "c", "assembly", "micropython", "lua", "freertos", "zephyr", "vxworks", "arduino", "raspberry pi", "esp32", "stm32", "mqtt", "coap", "zigbee", "lorawan", "modbus", "keil", "iar embedded workbench", "platformio", "testng", "cucumber", "gauge", "karate", "jmeter", "gatling", "locust", "owasp dependency-check", "snyk", "fortify", "detox", "earlgrey", "xctest", "bdd", "tdd"
+]
+
+# Извлечение ключевых навыков из текста
+def extract_key_skills(text: str) -> List[str]:
+    # Очистка текста
+    cleaned_text = clean_text(text)
+
+    # Поиск навыков через ключевые слова
+    skills = set()
+    for keyword in SKILLS_KEYWORDS:
+        if re.search(rf"\b{re.escape(keyword)}\b", cleaned_text):
+            skills.add(keyword)
+
+    # Дополнительный поиск через NER
+    entities = extract_entities(cleaned_text)
+    for entity, label in entities:
+        if label in {"TECH", "SKILL"}:  # Если есть кастомные метки для навыков
+            skills.add(entity.lower())
+
+    return list(skills)
+#----------------------------------------------------------------------
 #извлечение текста с pdf
 def extract_text_from_pdf(file_path):
     reader = PdfReader(file_path)
@@ -135,19 +197,41 @@ def process_personal_info(personal_block):
     return data
 
 
-def process_education(education_block):
-    """Извлечение данных из блока образования."""
+def process_education(education_block: str) -> Dict[str, str]:
+    """
+    Извлечение данных об образовании и специальности.
+    """
     doc = nlp(education_block)
     data = {
         "university": None,
         "specialization": None
     }
 
+    # Списки синонимов для поиска
+    university_keywords = ["университет", "институт", "академия", "колледж", "школа", "вузы"]
+    specialization_keywords = ["специальность", "профиль", "направление", "квалификация", "дисциплина"]
+
+    # Поиск университета
     for sent in doc.sents:
-        if "университет" in sent.text.lower():
-            data["university"] = sent.text.split(":")[-1].strip()
-        elif "специальность" in sent.text.lower():
-            data["specialization"] = sent.text.split(":")[-1].strip()
+        if any(keyword in sent.text.lower() for keyword in university_keywords):
+            # Используем регулярное выражение для извлечения названия
+            match = re.search(rf"(?:{'|'.join(university_keywords)}):\s*([^\n]+)", sent.text.lower())
+            if match:
+                data["university"] = match.group(1).strip()
+            else:
+                # Если нет явного разделителя, берем всё предложение
+                data["university"] = sent.text.strip()
+
+    # Поиск специальности
+    for sent in doc.sents:
+        if any(keyword in sent.text.lower() for keyword in specialization_keywords):
+            # Используем регулярное выражение для извлечения специальности
+            match = re.search(rf"(?:{'|'.join(specialization_keywords)}):\s*([^\n]+)", sent.text.lower())
+            if match:
+                data["specialization"] = match.group(1).strip()
+            else:
+                # Если нет явного разделителя, берем всё предложение
+                data["specialization"] = sent.text.strip()
 
     return data
 
@@ -195,3 +279,4 @@ def process_skills(skills_block: str) -> List[str]:
             skills.add(ent.text.strip().lower())
 
     return list(skills)
+
