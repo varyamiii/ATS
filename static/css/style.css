@@ -40,6 +40,7 @@ h1 {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #333;
 }
 
 .form-group input,
@@ -48,6 +49,7 @@ h1 {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .upload-section {
@@ -99,6 +101,7 @@ h1 {
     background-color: #f8d7da;
     color: #721c24;
 }
+
 /* Кастомные выпадающие списки */
 .custom-dropdown {
     position: relative;
@@ -117,7 +120,7 @@ h1 {
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 250px;
+    width: 100%;
     text-align: left;
     cursor: pointer;
     font-size: 14px;
@@ -127,8 +130,8 @@ h1 {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    width: 250px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    width: 100%;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 4px;
     max-height: 200px;
@@ -172,6 +175,75 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     margin: 5px 0;
+}
+
+.counter-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.counter-btn {
+    padding: 5px 10px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.counter-btn:hover {
+    background-color: #ddd;
+}
+
+#experience {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 0 5px;
+}
+
+.counter-label {
+    margin-left: 5px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.selected-display {
+    margin-top: 8px;
+    padding: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    font-size: 0.9em;
+    min-height: 24px;
+}
+
+.show { display: block; }
+
+/* Дополнительные стили для согласованности */
+button[type="submit"],
+button[type="reset"] {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+}
+
+button[type="reset"] {
+    background-color: #ccc;
+    color: #333;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+    opacity: 0.9;
 }
 
 .show { display: block; }
