@@ -1,8 +1,17 @@
+// Общие элементы
 const fileInput = document.getElementById('resume-upload');
 const uploadedFilesList = document.getElementById('uploaded-files-list');
 const progressBar = document.getElementById('progress-bar');
+const filterForm = document.getElementById('filter-form'); // Добавляем объявление filterForm
+const experienceInput = document.getElementById('experience'); // Для сброса счетчика
 
-fileInput.addEventListener('change', (event) => {
+// Проверка существования элементов
+if (!fileInput || !uploadedFilesList || !progressBar || !filterForm) {
+    console.error('Необходимые элементы не найдены в DOM.');
+}
+
+// Обработчик загрузки файлов
+fileInput?.addEventListener('change', (event) => {
     const files = event.target.files;
     if (files.length === 0) return;
 
@@ -75,42 +84,88 @@ fileInput.addEventListener('change', (event) => {
 
     xhr.send(formData);
 });
+document.addEventListener('DOMContentLoaded', () => {
+    // Восстановление состояния
+    document.querySelectorAll('.dropdown-content input').forEach(checkbox => {
+        const key = `cb_${checkbox.name}_${checkbox.value}`;
+        checkbox.checked = localStorage.getItem(key) === 'true';
+    });
+    updateSelectedDisplays();
+});
 
-// Обработчик выпадающих списков
-document.querySelectorAll('.dropbtn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const menu = this.parentElement.querySelector('.dropdown-content');
-        menu.classList.toggle('show');
-
-        // Закрытие при клике вне
-        document.addEventListener('click', (e) => {
-            if (!menu.contains(e.target) && !btn.contains(e.target)) {
-                menu.classList.remove('show');
-            }
-        });
+document.querySelectorAll('.dropdown-content input').forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
+        const key = `cb_${checkbox.name}_${checkbox.value}`;
+        localStorage.setItem(key, e.target.checked);
+        updateSelectedDisplays();
     });
 });
 
-// Обработчик формы
-filterForm.addEventListener('submit', (event) => {
+function updateSelectedDisplays() {
+    document.querySelectorAll('.custom-dropdown').forEach(container => {
+        const name = container.querySelector('input').name;
+        const selected = Array.from(container.querySelectorAll('input:checked'))
+            .map(el => el.parentElement.textContent.trim())
+            .join(', ');
+
+        const display = container.querySelector('.selected-display');
+        display.innerHTML = selected
+            ? `<strong>Выбрано:</strong> ${selected}`
+            : '<em>Ничего не выбрано</em>';
+    });
+}
+// Обработчик выпадающих списков
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const menu = this.parentElement.querySelector('.dropdown-content');
+        menu.classList.toggle('show');
+    });
+});
+
+// Закрытие выпадающих списков при клике вне
+document.addEventListener('click', (e) => {
+    document.querySelectorAll('.dropdown-content').forEach(menu => {
+        if (!menu.contains(e.target) && !menu.previousElementSibling.contains(e.target)) {
+            menu.classList.remove('show');
+        }
+    });
+});
+
+// Валидация ручного ввода
+document.getElementById('experience').addEventListener('input', (e) => {
+    let value = parseInt(e.target.value) || 0;
+    value = Math.max(0, Math.min(50, value));
+    e.target.value = value;
+});
+
+// Валидация ручного ввода для опыта работы
+document.getElementById('experience')?.addEventListener('input', (e) => {
+    let value = parseInt(e.target.value) || 0;
+    value = Math.max(0, Math.min(50, value)); // Ограничение: 0–50 лет
+    e.target.value = value;
+});
+
+// Обработчик формы фильтров
+filterForm?.addEventListener('submit', (event) => {
     event.preventDefault();
 
     // Сбор данных из кастомных списков
     const getChecked = (name) => {
         return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`))
-                   .map(checkbox => checkbox.value);
+            .map(checkbox => checkbox.value);
     };
 
     const filters = {
-        position: document.getElementById('position').value,
-        employment_type: document.getElementById('employment_type').value,
+        position: document.getElementById('position')?.value || '',
+        employment_type: document.getElementById('employment_type')?.value || '',
+        competency_level: document.getElementById('competency_level')?.value || '',
         work_format: getChecked('work_format'),
         education: getChecked('education'),
-        experience: document.getElementById('experience').value,
+        experience: document.getElementById('experience')?.value || '0',
         skills: getChecked('skills'),
         english_level: getChecked('english_level'),
-        special_requirements: document.getElementById('special_requirements').value
+        special_requirements: document.getElementById('special_requirements')?.value || ''
     };
 
     console.log('Фильтры:', filters);
@@ -118,11 +173,32 @@ filterForm.addEventListener('submit', (event) => {
 });
 
 // Сброс формы
-document.getElementById('reset-filters').addEventListener('click', () => {
+document.getElementById('reset-filters')?.addEventListener('click', () => {
+    // Сброс чекбоксов
     document.querySelectorAll('.dropdown-content input').forEach(input => {
         input.checked = false;
     });
+
+    // Очистка localStorage
+    localStorage.clear(); // Полная очистка
+
+    // Сброс текстовых полей и селектов
+    document.querySelectorAll('.form-group input, .form-group select').forEach(input => {
+        if(input.type !== 'checkbox' && input.type !== 'file') {
+            input.value = '';
+        }
+    });
+
+    // Сброс текста кнопок
     document.querySelectorAll('.dropbtn').forEach(btn => {
         btn.textContent = 'Выберите';
+    });
+
+    // Сброс счетчика опыта работы
+    experienceInput.value = '0';
+
+    // Очистка контейнеров с выбранными значениями
+    document.querySelectorAll('.selected-display').forEach(display => {
+        display.textContent = '';
     });
 });

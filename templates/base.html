@@ -11,13 +11,26 @@
 
     <div class="container">
         <!-- Левая панель: Форма фильтров -->
-<div class="left-panel">
-    <h2>Фильтры</h2>
-    <form id="filter-form">
+        <div class="left-panel">
+            <h2>Фильтры</h2>
+            <form id="filter-form">
+
         <!-- Должность -->
         <div class="form-group">
-            <label>Должность:</label>
-            <input type="text" id="position" placeholder="Введите должность">
+        <label>Должность:</label>
+        <input type="text" id="position" placeholder="Введите должность">
+        </div>
+
+         <!-- Уровень компетентности -->
+        <div class="form-group">
+            <label for="competency_level">Уровень компетентности:</label>
+            <select id="competency_level" name="competency_level">
+                <option value="">Выберите уровень</option>
+                <option value="intern">Intern</option>
+                <option value="junior">Junior</option>
+                <option value="middle">Middle</option>
+                <option value="senior">Senior</option>
+            </select>
         </div>
 
         <!-- Тип занятости -->
@@ -32,36 +45,41 @@
             </select>
         </div>
 
-        <!-- Формат работы -->
-        <div class="form-group custom-dropdown">
-            <label>Формат работы:</label>
-            <div class="dropdown">
-                <button class="dropbtn" type="button">Выберите форматы</button>
-                <div class="dropdown-content">
-                    <label><input type="checkbox" name="work_format" value="office"> Офис</label>
-                    <label><input type="checkbox" name="work_format" value="hybrid"> Гибрид</label>
-                    <label><input type="checkbox" name="work_format" value="remote"> Удаленка</label>
-                </div>
-            </div>
-        </div>
+<!--        &lt;!&ndash; Формат работы &ndash;&gt;-->
+<!--        <div class="form-group custom-dropdown">-->
+<!--            <label>Формат работы:</label>-->
+<!--            <div class="dropdown">-->
+<!--                <button class="dropbtn" type="button">Выберите форматы</button>-->
+<!--                <div class="dropdown-content">-->
+<!--                    <label><input type="checkbox" name="work_format" value="office"> Офис</label>-->
+<!--                    <label><input type="checkbox" name="work_format" value="hybrid"> Гибрид</label>-->
+<!--                    <label><input type="checkbox" name="work_format" value="remote"> Удаленка</label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <!-- Образование -->
         <div class="form-group custom-dropdown">
             <label>Образование:</label>
             <div class="dropdown">
-                <button class="dropbtn" type="button">Выберите уровни</button>
+                <!-- Добавлен data-атрибут для идентификации -->
+                <button class="dropbtn education-btn" type="button" data-count="0">
+                    Выберите уровни
+                </button>
                 <div class="dropdown-content">
                     <label><input type="checkbox" name="education" value="higher_full"> Высшее полное</label>
                     <label><input type="checkbox" name="education" value="higher"> Высшее</label>
                     <label><input type="checkbox" name="education" value="secondary"> Среднее профессиональное</label>
                 </div>
+                <div class="selected-display"></div> <!-- Новый контейнер -->
             </div>
         </div>
 
         <!-- Опыт работы -->
         <div class="form-group">
             <label>Опыт работы:</label>
-            <input type="text" id="experience" placeholder="Например: 3 года">
+            <input type="number" id="experience" min="0" max="50" step="1" value="0">
+            <span class="counter-label">лет</span>
         </div>
 
         <!-- Скилы -->
@@ -115,6 +133,7 @@
                     <label><input type="checkbox" name="skills" value="devops">DevOps</label>
                     <label><input type="checkbox" name="skills" value="api">API</label>
                 </div>
+                <div class="selected-display"></div> <!-- Новый контейнер -->
             </div>
         </div>
 
@@ -132,6 +151,7 @@
                     <label><input type="checkbox" name="english_level" value="c1"> C1</label>
                     <label><input type="checkbox" name="english_level" value="c2"> C2</label>
                 </div>
+                <div class="selected-display"></div> <!-- Новый контейнер -->
             </div>
         </div>
 
