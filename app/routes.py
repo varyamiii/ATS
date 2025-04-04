@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.testing import db
 
 from app.utils import extract_text_from_pdf, save_text_to_json, parse_resume, \
-    extract_entities, lemmatize_text, clean_text,tokenize_text,create_vector,\
-    extract_key_skills, process_contact_info, process_personal_info, process_education,\
-    process_skills
+    extract_entities, lemmatize_text, clean_text, tokenize_text, create_vector, \
+    process_contact_info, process_personal_info, process_education, \
+    process_skills, extract_english_level, load_universities
 from app.models import process_embedding
 import os
 import json
@@ -42,17 +42,22 @@ async def upload_files(files: list[UploadFile] = File(...)):
             file_path = os.path.join("uploads", file.filename)
             with open(file_path, "wb") as f:
                 f.write(await file.read())
-
+            # universities = load_universities("uni.txt")
+            # print(universities)
             # Извлечение текста
             text = extract_text_from_pdf(file_path)
+            # print(text)
             # print("Извлеченный текст:", text[:500])
-            print("Сущности:", extract_entities(text))
+            # print("Сущности:", extract_entities(text))
             # print("лема:", lemmatize_text(text))
             # print("токены:", tokenize_text(text))
-            print("образование:", process_education(text))
-            print("навыки",extract_key_skills(text))
-            print("человек", process_personal_info(text))
-            print("навыки2.0", process_skills(text))
+            # print("образование:", process_education(text, universities))
+            print("человек :", process_personal_info(text))
+            print(("контакты :",process_contact_info(text)))
+            print("навыки :",process_skills(text))
+
+            print("уровень английского : ",extract_english_level(text))
+            # print("навыки2.0", process_skills(text))
 
             # Сохранение текста в JSON
             json_output_path = os.path.join("uploads", f"{os.path.splitext(file.filename)[0]}.json")
