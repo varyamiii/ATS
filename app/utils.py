@@ -17,8 +17,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification, pipelin
 # Загрузка модели spaCy для русского языка
 nlp = spacy.load("ru_core_news_lg")
 
-model_path = r"C:\МОДЕЛЬ\model-best\output\model-best"
-nlp_uni = spacy.load(model_path)
+
 # Инициализация модели SentenceTransformer
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -328,8 +327,7 @@ def search_university_position(university_name: str) -> str:
 
 
 
-if "sentencizer" not in nlp_uni.pipe_names:
-    nlp_uni.add_pipe("sentencizer")
+
 
 def load_universities(file_path: str) -> Dict[str, str]:
     """
