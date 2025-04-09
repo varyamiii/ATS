@@ -110,3 +110,13 @@ async def add_position(position_data: dict):
         return {"message": "Данные успешно добавлены в базу данных!"}
     except Exception as e:
         return {"error": str(e)}, 500
+
+@router.get("/ranking")
+async def show_ranking(request: Request, position: str = ""):
+    return templates.TemplateResponse(
+        "ranking.html",
+        {
+            "request": request,
+            "position": position
+        }
+    )

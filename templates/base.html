@@ -198,12 +198,26 @@
             </div>
             <div class="results-section">
                 <h2>Результаты отбора</h2>
+                <button id="show-ranking" class="ranking-btn">Показать рейтинг кандидатов</button>
                 <ul id="results-list">
                     <!-- Результаты анализа будут здесь -->
                 </ul>
             </div>
         </div>
     </div>
+    <script>
+        // Обработчик для кнопки "Показать рейтинг кандидатов"
+        document.getElementById('show-ranking').addEventListener('click', () => {
+            // Получаем значение должности из формы (если оно есть)
+            const position = document.getElementById('position')?.value || 'Не указана';
+
+            // Формируем URL для перехода на страницу /ranking
+            const rankingUrl = `/ranking?position=${encodeURIComponent(position)}`;
+
+            // Переходим на страницу /ranking
+            window.location.href = rankingUrl;
+        });
+    </script>
     <script>
         // Логика для выпадающих списков
         document.querySelectorAll('.dropdown button').forEach(button => {

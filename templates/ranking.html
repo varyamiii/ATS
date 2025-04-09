@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Рейтинг кандидатов</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/ranking.css">
+</head>
+<body>
+    <div class="ranking-container">
+        <button onclick="window.history.back()" class="back-button">
+            ← Вернуться
+        </button>
+
+        <h1>Рейтинг кандидатов</h1>
+
+        <h2>Должность: <span id="position-title"></span></h2>
+
+        <div class="candidate-card">
+            <div class="candidate-info">
+                <div class="meta-row" style="margin-bottom: 15px;">
+                    <span class="meta-label">ФИО:</span>
+                    <span class="meta-value">Иванов Иван Иванович</span>
+                </div>
+
+                <div class="compliance-wrapper">
+                    <div class="meta-label" style="margin-bottom: 8px;">
+                        Соответствие требованиям
+                    </div>
+                    <div class="compliance-percent">
+                        85%
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="view-resume">
+                Просмотр резюме
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const position = urlParams.get('position') || 'Не указана';
+            document.getElementById('position-title').textContent = position;
+        });
+    </script>
+</body>
+</html>
