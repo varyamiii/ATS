@@ -1,41 +1,40 @@
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import SQLAlchemyError
-from database.base import Candidate
+# request.py
 
-def add_candidate_to_db(db: Session, blocks: dict, text: str):
-    """
-    Формирует данные для записи в БД и добавляет нового кандидата.
-    :param db: Синхронная сессия базы данных.
-    :param blocks: Словарь с разобранными блоками текста резюме.
-    :param text: Полный текст резюме.
-    :return: Созданный объект Candidate или None в случае ошибки.
-    """
-    try:
-        # Формирование данных для записи в БД
-        candidate_data = {
-            "name": blocks.get("personal_info", {}).get("name"),
-            "email": blocks.get("contact_info", {}).get("email"),
-            "phone": blocks.get("contact_info", {}).get("phone"),
-            "employment_type": None,  # Можно извлечь из текста или задать по умолчанию
-            "work_format": None,  # Можно извлечь из текста или задать по умолчанию
-            "education": blocks.get("education", {}).get("university"),
-            "skills": blocks.get("skills", []),
-            "experience_years": None,  # Можно извлечь из текста или задать по умолчанию
-            "english_level": None,  # Можно извлечь из текста или задать по умолчанию
-            "special_requirements": blocks.get("projects"),
-            "resume_text": text
-        }
+import psycopg2
+from psycopg2 import sql
 
-        # Добавление кандидата в базу данных
-        new_candidate = Candidate(**candidate_data)
-        db.add(new_candidate)
-        db.commit()
-        db.refresh(new_candidate)
+class DatabaseHandler:
+    def __init__(self, db_config):
+        self.connection = None
+        try:
+            self.connection = psycopg2.connect(**db_config)
+            print("Подключение к базе данных установлено.")
+        except Exception as e:
+            print(f"Ошибка подключения к базе данных: {e}")
+            raise
 
-        return new_candidate
+    def close_connection(self):
+        if self.connection:
+            self.connection.close()
+            print("Соединение с базой данных закрыто.")
 
-    except SQLAlchemyError as e:
-        # Логирование ошибки
-        print(f"Ошибка при добавлении кандидата в БД: {e}")
-        db.rollback()  # Откат транзакции в случае ошибки
-        return None
+    def insert_position(self, position_data):
+        query = sql.SQL("""
+            INSERT INTO job_positions (
+                position_name, competency_level, employment_type, education,
+                work_experience, key_skills, english_level, special_requirements
+            ) VALUES (
+                %(position_name)s, %(competency_level)s, %(employment_type)s, %(education)s,
+                %(work_experience)s, %(key_skills)s, %(english_level)s, %(special_requirements)s
+            )
+        """)
+
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(query, position_data)
+                self.connection.commit()
+                print("Запись успешно добавлена.")
+        except Exception as e:
+            self.connection.rollback()
+            print(f"Ошибка при добавлении записи: {e}")
+            raise
