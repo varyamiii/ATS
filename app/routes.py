@@ -12,8 +12,7 @@ from app.models import process_embedding
 import os
 import json
 
-from database.base import get_db
-from database.request import add_candidate_to_db
+from database.request import DatabaseHandler
 
 #------------------------Маршруты API
 router = APIRouter()
@@ -25,7 +24,7 @@ async def read_root(request: Request):
 
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
-    db: AsyncSession = Depends(get_db)
+    #db: AsyncSession = Depends(get_db)
     results = []
     for file in files:
         # Проверка расширения файла
@@ -48,7 +47,7 @@ async def upload_files(files: list[UploadFile] = File(...)):
             text = extract_text_from_pdf(file_path)
             # print(text)
             # print("Извлеченный текст:", text[:500])
-            # print("Сущности:", extract_entities(text))
+            print("Сущности:", extract_entities(text))
             # print("лема:", lemmatize_text(text))
             # print("токены:", tokenize_text(text))
             # print("образование:", process_education(text, universities))
@@ -88,3 +87,36 @@ async def upload_files(files: list[UploadFile] = File(...)):
                 "message": f"Ошибка: {str(e)}"
             })
     return {"results": results}
+
+
+@router.post("/add_position")
+async def add_position(position_data: dict):
+    # Настройки подключения к базе данных
+    db_config = {
+        'dbname': 'hh_helper',
+        'user': 'postgres',
+        'password': 'wolf24aravrav050504',
+        'host': 'localhost',
+        'port': 5432
+    }
+
+    try:
+        # Создаем объект для работы с базой данных
+        db_handler = DatabaseHandler(db_config)
+
+        # Добавляем данные в базу
+        db_handler.insert_position(position_data)
+
+        return {"message": "Данные успешно добавлены в базу данных!"}
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+@router.get("/ranking")
+async def show_ranking(request: Request, position: str = ""):
+    return templates.TemplateResponse(
+        "ranking.html",
+        {
+            "request": request,
+            "position": position
+        }
+    )

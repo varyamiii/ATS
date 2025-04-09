@@ -1,5 +1,3 @@
-
-import logging
 from pathlib import Path
 
 from PyPDF2 import PdfReader
@@ -157,24 +155,35 @@ def process_contact_info(contact_block):
 
 #------------------------ИМЯ И ФАМИЛИЯ
 def process_personal_info(personal_block):
-    # Используем функцию extract_entities для извлечения сущностей
+    # Очищаем текст
+    personal_block = personal_block.strip()
+
+    # Извлекаем сущности через spaCy
     entities = extract_entities(personal_block)
 
-    # Фильтруем сущности, оставляя только те, которые относятся к категории PER (имена и фамилии)
-    name_parts = [
-        ent[0] for ent in entities
-        if ent[1] == "PER" and re.match(r"^[A-ZА-Я][a-zа-я]+\s+[A-ZА-Я][a-zа-я]+$", ent[0])
-    ]
+    # Фильтруем сущности, оставляя только PER (имена и фамилии)
+    name_parts = []
+    for ent in entities:
+        if ent[1] == "PER":
+            words = ent[0].split()
+            if len(words) >= 2:  # Берем только фамилию и имя
+                name_parts.append(" ".join(words[:2]))
 
-    # Убираем дубликаты и объединяем найденные части имени
-    unique_name_parts = list(set(name_parts))  # Убираем дубликаты
-    data = {}
-    if unique_name_parts:
-        data["name"] = " ".join(unique_name_parts[:2])  # Берем первые две части (имя и фамилию)
+    # Если spaCy не нашел сущности, пробуем регулярные выражения
+    if not name_parts:
+        # Регулярное выражение для поиска имени и фамилии (в любом порядке)
+        full_name_pattern = r"\b([А-ЯЁ][а-яё]+)\s+([А-ЯЁ][а-яё]+)(?:\s+[А-ЯЁ][а-яё]+)?\b"
+        match = re.search(full_name_pattern, personal_block)
+        if match:
+            first_name = match.group(1)
+            last_name = match.group(2)
+            return {"name": f"{first_name} {last_name}"}
 
-    return data
+    # Если найдены сущности через spaCy, берем первые две части
+    if len(name_parts) >= 1:
+        return {"name": name_parts[0]}  # Берем первое найденное имя
 
-
+    return {"name": ""}
 #----------------------------------SKILLS
 
 SKILLS_KEYWORDS = [
