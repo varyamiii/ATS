@@ -419,3 +419,6 @@ def process_education(education_block: str, universities: Dict[str, str]) -> Dic
                 break
 
     return data
+
+#=====================================РАНЖИРОВАНИЕ======================================
+
