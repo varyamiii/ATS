@@ -26,6 +26,8 @@ async def read_root(request: Request):
 async def upload_files(files: list[UploadFile] = File(...)):
     #db: AsyncSession = Depends(get_db)
     results = []
+    db_handler = DatabaseHandler()
+
     for file in files:
         # Проверка расширения файла
         if not file.filename.lower().endswith('.pdf'):
@@ -45,6 +47,15 @@ async def upload_files(files: list[UploadFile] = File(...)):
             # print(universities)
             # Извлечение текста
             text = extract_text_from_pdf(file_path)
+
+            person=process_personal_info(text)
+            phone_email=process_contact_info(text)
+            skills=process_skills(text)
+            english= extract_english_level(text)
+            # Разбор контактов
+            phone = phone_email.get('phone', '').strip()
+            email = phone_email.get('email', '').strip()
+
             # print(text)
             # print("Извлеченный текст:", text[:500])
             print("Сущности:", extract_entities(text))
@@ -58,6 +69,7 @@ async def upload_files(files: list[UploadFile] = File(...)):
             print("уровень английского : ",extract_english_level(text))
             # print("навыки2.0", process_skills(text))
 
+
             # Сохранение текста в JSON
             json_output_path = os.path.join("uploads", f"{os.path.splitext(file.filename)[0]}.json")
             save_text_to_json(text, json_output_path)
@@ -67,7 +79,19 @@ async def upload_files(files: list[UploadFile] = File(...)):
             # # Добавление кандидата в базу данных
             # new_candidate = await add_candidate_to_db(db, blocks, text)
 
+            # Подготовка данных для вставки
+            candidate_data = {
+                "full_name": person.get('name', ''),  # ФИО
+                "phone": phone,  # Телефон
+                "email": email,  # Почта
+                "skills": skills,  # Навыки (массив строк)
+                "english_level": english,  # Уровень английского
+                "education": "",  # Пустое поле для образования
+                "work_experience": ""  # Пустое поле для опыта работы
+            }
 
+            # Вставка данных в таблицу candidates вместе с PDF-файлом
+            db_handler.insert_candidate(candidate_data, file_path)
             # Создание эмбеддинга
             embedding_path = os.path.join("uploads", f"{file.filename}.json")
             embedding_result = process_embedding(text, embedding_path)
@@ -86,23 +110,15 @@ async def upload_files(files: list[UploadFile] = File(...)):
                 "status": "error",
                 "message": f"Ошибка: {str(e)}"
             })
+    db_handler.close_connection()
     return {"results": results}
 
 
 @router.post("/add_position")
 async def add_position(position_data: dict):
-    # Настройки подключения к базе данных
-    db_config = {
-        'dbname': 'hh_helper',
-        'user': 'postgres',
-        'password': 'wolf24aravrav050504',
-        'host': 'localhost',
-        'port': 5432
-    }
-
     try:
         # Создаем объект для работы с базой данных
-        db_handler = DatabaseHandler(db_config)
+        db_handler = DatabaseHandler()
 
         # Добавляем данные в базу
         db_handler.insert_position(position_data)
@@ -110,7 +126,6 @@ async def add_position(position_data: dict):
         return {"message": "Данные успешно добавлены в базу данных!"}
     except Exception as e:
         return {"error": str(e)}, 500
-
 @router.get("/ranking")
 async def show_ranking(request: Request, position: str = ""):
     return templates.TemplateResponse(
