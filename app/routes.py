@@ -6,7 +6,7 @@ from sqlalchemy.testing import db
 
 from app.utils import extract_text_from_pdf, save_text_to_json, parse_resume, \
     extract_entities, lemmatize_text, clean_text, tokenize_text, create_vector, \
-    process_contact_info, process_personal_info, process_education, \
+    process_contact_info, process_personal_info, \
     process_skills, extract_english_level, load_universities
 from app.models import process_embedding
 import os
@@ -53,7 +53,9 @@ async def upload_files(files: list[UploadFile] = File(...)):
 
             # Обработка данных
             person = process_personal_info(text)
+
             phone_email = process_contact_info(text)
+            print("кандидат :", phone_email)
             skills = process_skills(text)
             english = extract_english_level(text)
 
@@ -71,21 +73,25 @@ async def upload_files(files: list[UploadFile] = File(...)):
                 "education": "",  # Пустое поле для образования
                 "work_experience": ""  # Пустое поле для опыта работы
             }
+            #Текст с резюме
+            # Сохранение текста в JSON
+            json_output_path = os.path.join("uploads", f"{os.path.splitext(file.filename)[0]}.json")
+            save_text_to_json(text, json_output_path)
 
             # Вставка данных в таблицу candidates вместе с PDF-файлом
             db_handler.insert_candidate(candidate_data, file_path)
-
-            # Создание эмбеддинга
-            embedding_path = os.path.join("uploads", f"{file.filename}.json")
-            embedding_result = process_embedding(text, embedding_path)
+            #
+            # # Создание эмбеддинга
+            # embedding_path = os.path.join("uploads", f"{file.filename}.json")
+            # embedding_result = process_embedding(text, embedding_path)
 
             # Добавление результата
             results.append({
                 "filename": file.filename,
                 "status": "success",
                 "message": "Текст успешно извлечен и обработан.",
-                "text": text[:100] + "...",
-                "embedding_path": embedding_path
+                "text": text[:100] + "..."
+
             })
 
         except Exception as e:
