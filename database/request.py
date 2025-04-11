@@ -3,15 +3,6 @@
 import psycopg2
 from psycopg2 import sql
 
-# # Конфигурация базы данных
-# DB_CONFIG = {
-#     'dbname': 'hh_helper',
-#     'user': 'postgres',
-#     'password': 'wolf24aravrav050504',
-#     'host': 'localhost',
-#     'port': 5432
-# }
-
 from dotenv import load_dotenv
 import os
 load_dotenv()

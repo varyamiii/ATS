@@ -30,7 +30,7 @@
         .selected-display {
             margin-top: 5px;
             font-size: 14px;
-            color: #555;
+            //color: #555;
         }
 
         /* Стили для прогресс-бара */
@@ -69,10 +69,10 @@
                     <label for="competency_level">Уровень компетентности:</label>
                     <select id="competency_level" name="competency_level">
                         <option value="">Выберите уровень</option>
-                        <option value="intern">Intern</option>
-                        <option value="junior">Junior</option>
-                        <option value="middle">Middle</option>
-                        <option value="senior">Senior</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Middle">Middle</option>
+                        <option value="Senior">Senior</option>
                     </select>
                 </div>
                 <!-- Тип занятости -->
@@ -80,10 +80,10 @@
                     <label for="employment_type">Тип занятости:</label>
                     <select id="employment_type" name="employment_type">
                         <option value="">Выберите тип</option>
-                        <option value="full">Полная занятость</option>
-                        <option value="part">Частичная занятость</option>
-                        <option value="project">Проектная деятельность</option>
-                        <option value="internship">Стажировка</option>
+                        <option value="Полная занятость">Полная занятость</option>
+                        <option value="Частичная занятость">Частичная занятость</option>
+                        <option value="Проектная деятельность">Проектная деятельность</option>
+                        <option value="Стажировка">Стажировка</option>
                     </select>
                 </div>
                 <!-- Образование -->
@@ -94,11 +94,12 @@
                             Выберите уровни
                         </button>
                         <div class="dropdown-content">
-                            <label><input type="checkbox" name="education" value="higher_full"> Высшее полное</label>
-                            <label><input type="checkbox" name="education" value="higher"> Высшее</label>
-                            <label><input type="checkbox" name="education" value="secondary"> Среднее профессиональное</label>
+                            <label><input type="checkbox" name="education" value="Высшее полное"> Высшее полное</label>
+                            <label><input type="checkbox" name="education" value="Высшее"> Высшее</label>
+                            <label><input type="checkbox" name="education" value="Среднее профессиональное"> Среднее профессиональное</label>
                         </div>
-                        <div class="selected-display"></div>
+
+
                     </div>
                 </div>
                 <!-- Опыт работы -->
@@ -115,43 +116,44 @@
                             Выберите навыки
                         </button>
                         <div class="dropdown-content">
-                            <label><input type="checkbox" name="skills" value="python">Python</label>
-                            <label><input type="checkbox" name="skills" value="java">Java</label>
-                            <label><input type="checkbox" name="skills" value="javascript">JavaScript</label>
-                            <label><input type="checkbox" name="skills" value="cpp">C++</label>
-                            <label><input type="checkbox" name="skills" value="csharp">C#</label>
-                            <label><input type="checkbox" name="skills" value="php">PHP</label>
-                            <label><input type="checkbox" name="skills" value="ruby">Ruby</label>
-                            <label><input type="checkbox" name="skills" value="swift">Swift</label>
-                            <label><input type="checkbox" name="skills" value="kotlin">Kotlin</label>
-                            <label><input type="checkbox" name="skills" value="go">Go</label>
-                            <label><input type="checkbox" name="skills" value="rust">Rust</label>
-                            <label><input type="checkbox" name="skills" value="react">React</label>
-                            <label><input type="checkbox" name="skills" value="angular">Angular</label>
-                            <label><input type="checkbox" name="skills" value="vue">Vue.js</label>
-                            <label><input type="checkbox" name="skills" value="tensorflow">TensorFlow</label>
-                            <label><input type="checkbox" name="skills" value="pytorch">PyTorch</label>
-                            <label><input type="checkbox" name="skills" value="pandas">Pandas</label>
-                            <label><input type="checkbox" name="skills" value="numpy">NumPy</label>
-                            <label><input type="checkbox" name="skills" value="sql">SQL</label>
-                            <label><input type="checkbox" name="skills" value="postgresql">PostgreSQL</label>
-                            <label><input type="checkbox" name="skills" value="mysql">MySQL</label>
-                            <label><input type="checkbox" name="skills" value="mongodb">MongoDB</label>
-                            <label><input type="checkbox" name="skills" value="nosql">NoSQL</label>
-                            <label><input type="checkbox" name="skills" value="docker">Docker</label>
-                            <label><input type="checkbox" name="skills" value="kubernetes">Kubernetes</label>
-                            <label><input type="checkbox" name="skills" value="aws">AWS</label>
-                            <label><input type="checkbox" name="skills" value="azure">Azure</label>
-                            <label><input type="checkbox" name="skills" value="gcp">Google Cloud</label>
-                            <label><input type="checkbox" name="skills" value="git">Git</label>
-                            <label><input type="checkbox" name="skills" value="linux">Linux</label>
-                            <label><input type="checkbox" name="skills" value="ml">ML</label>
-                            <label><input type="checkbox" name="skills" value="nlp">NLP</label>
-                            <label><input type="checkbox" name="skills" value="blockchain">Blockchain</label>
-                            <label><input type="checkbox" name="skills" value="devops">DevOps</label>
-                            <label><input type="checkbox" name="skills" value="api">API</label>
+                            <label><input type="checkbox" name="skills" value="Python">Python</label>
+                            <label><input type="checkbox" name="skills" value="Java">Java</label>
+                            <label><input type="checkbox" name="skills" value="JavaScript">JavaScript</label>
+                            <label><input type="checkbox" name="skills" value="C++">C++</label>
+                            <label><input type="checkbox" name="skills" value="C#">C#</label>
+                            <label><input type="checkbox" name="skills" value="PHP">PHP</label>
+                            <label><input type="checkbox" name="skills" value="Ruby">Ruby</label>
+                            <label><input type="checkbox" name="skills" value="Swift">Swift</label>
+                            <label><input type="checkbox" name="skills" value="Kotlin">Kotlin</label>
+                            <label><input type="checkbox" name="skills" value="Go">Go</label>
+                            <label><input type="checkbox" name="skills" value="Rust">Rust</label>
+                            <label><input type="checkbox" name="skills" value="React">React</label>
+                            <label><input type="checkbox" name="skills" value="Angular">Angular</label>
+                            <label><input type="checkbox" name="skills" value="Vue.js">Vue.js</label>
+                            <label><input type="checkbox" name="skills" value="TensorFlow">TensorFlow</label>
+                            <label><input type="checkbox" name="skills" value="PyTorch">PyTorch</label>
+                            <label><input type="checkbox" name="skills" value="Pandas">Pandas</label>
+                            <label><input type="checkbox" name="skills" value="NumPy">NumPy</label>
+                            <label><input type="checkbox" name="skills" value="SQL">SQL</label>
+                            <label><input type="checkbox" name="skills" value="PostgreSQL">PostgreSQL</label>
+                            <label><input type="checkbox" name="skills" value="MySQL">MySQL</label>
+                            <label><input type="checkbox" name="skills" value="MongoDB">MongoDB</label>
+                            <label><input type="checkbox" name="skills" value="NoSQL">NoSQL</label>
+                            <label><input type="checkbox" name="skills" value="Docker">Docker</label>
+                            <label><input type="checkbox" name="skills" value="Kubernetes">Kubernetes</label>
+                            <label><input type="checkbox" name="skills" value="AWS">AWS</label>
+                            <label><input type="checkbox" name="skills" value="Azure">Azure</label>
+                            <label><input type="checkbox" name="skills" value="Google Cloud">Google Cloud</label>
+                            <label><input type="checkbox" name="skills" value="Git">Git</label>
+                            <label><input type="checkbox" name="skills" value="Linux">Linux</label>
+                            <label><input type="checkbox" name="skills" value="ML">ML</label>
+                            <label><input type="checkbox" name="skills" value="NLP">NLP</label>
+                            <label><input type="checkbox" name="skills" value="Blockchain">Blockchain</label>
+
+                            <label><input type="checkbox" name="skills" value="DevOps">DevOps</label>
+                            <label><input type="checkbox" name="skills" value="API">API</label>
                         </div>
-                        <div class="selected-display"></div>
+
                     </div>
                 </div>
                 <!-- Уровень английского -->
@@ -162,15 +164,15 @@
                             Выберите уровни
                         </button>
                         <div class="dropdown-content">
-                            <label><input type="checkbox" name="english_level" value="any"> Не важен</label>
-                            <label><input type="checkbox" name="english_level" value="a1"> A1</label>
-                            <label><input type="checkbox" name="english_level" value="a2"> A2</label>
-                            <label><input type="checkbox" name="english_level" value="b1"> B1</label>
-                            <label><input type="checkbox" name="english_level" value="b2"> B2</label>
-                            <label><input type="checkbox" name="english_level" value="c1"> C1</label>
-                            <label><input type="checkbox" name="english_level" value="c2"> C2</label>
+                            <label><input type="checkbox" name="english_level" value="Не важен"> Не важен</label>
+                            <label><input type="checkbox" name="english_level" value="A1"> A1</label>
+                            <label><input type="checkbox" name="english_level" value="A2"> A2</label>
+                            <label><input type="checkbox" name="english_level" value="B1"> B1</label>
+                            <label><input type="checkbox" name="english_level" value="B2"> B2</label>
+                            <label><input type="checkbox" name="english_level" value="C1"> C1</label>
+                            <label><input type="checkbox" name="english_level" value="C2"> C2</label>
                         </div>
-                        <div class="selected-display"></div>
+
                     </div>
                 </div>
                 <!-- Особые требования -->
@@ -229,6 +231,7 @@
                 dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
             });
 
+
             // Обработка выбора чекбоксов
             dropdownContent.addEventListener('change', (event) => {
                 if (event.target.tagName === 'INPUT') {
@@ -239,7 +242,7 @@
                     button.textContent = selectedOptions.length > 0 ? selectedOptions.join(', ') : 'Выберите';
 
                     // Обновляем отображение выбранных значений
-                    selectedDisplay.textContent = selectedOptions.length > 0 ? `Выбрано: ${selectedOptions.join(', ')}` : '';
+                    //selectedDisplay.textContent = selectedOptions.length > 0 ? `Выбрано: ${selectedOptions.join(', ')}` : '';
                 }
             });
         });
@@ -312,6 +315,7 @@
                 });
 
                 const result = await response.json();
+
 
                 // Обновляем интерфейс
                 if (result.results) {

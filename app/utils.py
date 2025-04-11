@@ -70,13 +70,33 @@ def extract_text_from_pdf(file_path):
 
 
 # Функция для сохранения текста в JSON
+# def save_text_to_json(text, output_path):
+#     try:
+#         with open(output_path, "w", encoding="utf-8") as f:
+#             json.dump({"text": text}, f, ensure_ascii=False, indent=4)
+#     except Exception as e:
+#         raise IOError(f"Ошибка при записи JSON: {e}")
+
+
 def save_text_to_json(text, output_path):
     try:
+        # Очистка текста от лишних пробелов, табуляций и переносов строк
+        def clean_text(input_text):
+            # Удаляем лишние пробелы и табуляции между словами
+            input_text = re.sub(r'\s+', ' ', input_text)
+            # Удаляем пробелы в начале и конце строки
+            input_text = input_text.strip()
+            return input_text
+
+        # Очищаем текст
+        cleaned_text = clean_text(text)
+
+        # Сохраняем очищенный текст в JSON
         with open(output_path, "w", encoding="utf-8") as f:
-            json.dump({"text": text}, f, ensure_ascii=False, indent=4)
+            json.dump({"text": cleaned_text}, f, ensure_ascii=False, indent=4)
+
     except Exception as e:
         raise IOError(f"Ошибка при записи JSON: {e}")
-
 
 #----------------------------Предобработка текста
 
@@ -99,10 +119,7 @@ def parse_resume(text):
     if personal_info:
         blocks["personal_info"] = process_personal_info(personal_info)
 
-    # Образование
-    education = extract_block(r"(?i)(?:образование|education):\s*(.*?)(\n\n|\Z)", text)
-    if education:
-        blocks["education"] = process_education(education)
+
 
     # Курсы и тренинги
     courses = extract_block(r"(?i)(?:курсы и тренинги|courses and training|Professional development):\s*(.*?)(\n\n|\Z)", text)
@@ -283,56 +300,56 @@ def compare_word_sets(name1: str, name2: str, threshold: float = 0.7) -> bool:
     return similarity >= threshold
 list_uni = []
 
-def search_university_position(university_name: str) -> str:
-    """
-    Поиск позиции университета через AJAX-запрос на сайте.
-    """
-    url = "https://russiaedu.ru/_ajax/rating"
-    headers = {
-        "Accept": "application/json, text/javascript, */*; q=0.01",
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "Referer": "https://russiaedu.ru/rating",
-        "X-Requested-With": "XMLHttpRequest"
-    }
-    data = {
-        "edu_university[searchString]": university_name,  # Параметр для поиска
-        "pp": "10",  # Количество результатов на страницу
-        "pageNumber": "1"  # Номер страницы
-    }
-
-    try:
-        response = requests.post(url, headers=headers, data=data)
-        response.raise_for_status()
-
-        # Парсинг JSON-ответа
-        json_data = response.json()
-        print("J :  ", json_data)
-
-        if "rating" in json_data:
-            # Нормализуем название из запроса
-            normalized_university_name = normalize_name(university_name)
-            print('from query: ',normalized_university_name)
-            for result in json_data["rating"]:
-                org = result.get("org", {})
-                name = org.get("name", "").strip()
-                position = result.get("position", "")
-
-                # Нормализуем название из JSON
-                normalized_name = normalize_name(name)
-                print("from json :",normalized_name)
-                # Сравниваем названия как множества слов
-                if compare_word_sets(university_name, name):
-                    return position
-
-        logging.warning(f"Позиция для университета '{university_name}' не найдена на сайте.")
-        return "-"
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Ошибка при запросе позиции для университета '{university_name}': {e}")
-        return "-"
-
-    except Exception as e:
-        logging.error(f"Неизвестная ошибка при поиске позиции для университета '{university_name}': {e}")
-        return "-"
+# def search_university_position(university_name: str) -> str:
+#     """
+#     Поиск позиции университета через AJAX-запрос на сайте.
+#     """
+#     url = "https://russiaedu.ru/_ajax/rating"
+#     headers = {
+#         "Accept": "application/json, text/javascript, */*; q=0.01",
+#         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+#         "Referer": "https://russiaedu.ru/rating",
+#         "X-Requested-With": "XMLHttpRequest"
+#     }
+#     data = {
+#         "edu_university[searchString]": university_name,  # Параметр для поиска
+#         "pp": "10",  # Количество результатов на страницу
+#         "pageNumber": "1"  # Номер страницы
+#     }
+#
+#     try:
+#         response = requests.post(url, headers=headers, data=data)
+#         response.raise_for_status()
+#
+#         # Парсинг JSON-ответа
+#         json_data = response.json()
+#         print("J :  ", json_data)
+#
+#         if "rating" in json_data:
+#             # Нормализуем название из запроса
+#             normalized_university_name = normalize_name(university_name)
+#             print('from query: ',normalized_university_name)
+#             for result in json_data["rating"]:
+#                 org = result.get("org", {})
+#                 name = org.get("name", "").strip()
+#                 position = result.get("position", "")
+#
+#                 # Нормализуем название из JSON
+#                 normalized_name = normalize_name(name)
+#                 print("from json :",normalized_name)
+#                 # Сравниваем названия как множества слов
+#                 if compare_word_sets(university_name, name):
+#                     return position
+#
+#         logging.warning(f"Позиция для университета '{university_name}' не найдена на сайте.")
+#         return "-"
+#     except requests.exceptions.RequestException as e:
+#         logging.error(f"Ошибка при запросе позиции для университета '{university_name}': {e}")
+#         return "-"
+#
+#     except Exception as e:
+#         logging.error(f"Неизвестная ошибка при поиске позиции для университета '{university_name}': {e}")
+#         return "-"
 
 
 
@@ -356,69 +373,69 @@ def load_universities(file_path: str) -> Dict[str, str]:
         print(f"Ошибка: Файл {file_path} не найден.")
     return universities
 
-def process_education(education_block: str, universities: Dict[str, str]) -> Dict[str, str]:
-    """
-    Извлечение данных об образовании и специальности.
-    """
-    data = {
-        "university": None,
-        "specialization": None,
-        "rating": None
-    }
-
-    # Списки синонимов для поиска
-    university_keywords = [
-        "университет", "институт", "академия", "колледж", "школа", "вуз",
-        "технический университет", "государственный университет",
-        "исследовательский университет", "политехнический университет",
-        "ядерный университет", "национальный исследовательский"
-    ]
-    specialization_keywords = [
-        "специальность", "профиль", "направление", "квалификация", "дисциплина"
-    ]
-
-    # Приводим текст к нижнему регистру
-    education_block = education_block.lower()
-    # Проверяем, начинается ли блок с ключевого слова "образование"
-    if  education_block.startswith("образование"):
-        # return data  # Если ключевого слова нет, возвращаем пустые данные
-
-        # Нормализуем текст
-        normalized_block = normalize_name(education_block)
-        print("Norm :",normalized_block)
-        # Поиск университета
-        for keyword in university_keywords:
-            if keyword in normalized_block:
-                # Ищем подстроку, содержащую название университета
-                match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
-                if match:
-                    university_candidate = match.group(1).strip()
-                    # Проверяем, есть ли найденный университет в списке
-                    for abbreviation, full_name in universities.items():
-                        if (normalize_name(abbreviation) in normalize_name(university_candidate) or
-                                normalize_name(full_name) in normalize_name(university_candidate)):
-                            print("uni:",data["university"])
-                            data["university"] = full_name
-                            data["rating"] = search_university_position(abbreviation)
-                            break
-                    if data["university"]:
-                        print("uni:_f", data["university"])
-                        break
-
-    # Если университет не найден
-    if not data["university"]:
-        data["university"] = "-"
-        data["rating"] = "-"
-
-    # Поиск специальности
-    for keyword in specialization_keywords:
-        if keyword in normalized_block:
-            match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
-            if match:
-                data["specialization"] = match.group(1).strip()
-                break
-
-    return data
+# def process_education(education_block: str, universities: Dict[str, str]) -> Dict[str, str]:
+#     """
+#     Извлечение данных об образовании и специальности.
+#     """
+#     data = {
+#         "university": None,
+#         "specialization": None,
+#         "rating": None
+#     }
+#
+#     # Списки синонимов для поиска
+#     university_keywords = [
+#         "университет", "институт", "академия", "колледж", "школа", "вуз",
+#         "технический университет", "государственный университет",
+#         "исследовательский университет", "политехнический университет",
+#         "ядерный университет", "национальный исследовательский"
+#     ]
+#     specialization_keywords = [
+#         "специальность", "профиль", "направление", "квалификация", "дисциплина"
+#     ]
+#
+#     # Приводим текст к нижнему регистру
+#     education_block = education_block.lower()
+#     # Проверяем, начинается ли блок с ключевого слова "образование"
+#     if  education_block.startswith("образование"):
+#         # return data  # Если ключевого слова нет, возвращаем пустые данные
+#
+#         # Нормализуем текст
+#         normalized_block = normalize_name(education_block)
+#         print("Norm :",normalized_block)
+#         # Поиск университета
+#         for keyword in university_keywords:
+#             if keyword in normalized_block:
+#                 # Ищем подстроку, содержащую название университета
+#                 match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
+#                 if match:
+#                     university_candidate = match.group(1).strip()
+#                     # Проверяем, есть ли найденный университет в списке
+#                     for abbreviation, full_name in universities.items():
+#                         if (normalize_name(abbreviation) in normalize_name(university_candidate) or
+#                                 normalize_name(full_name) in normalize_name(university_candidate)):
+#                             print("uni:",data["university"])
+#                             data["university"] = full_name
+#                             data["rating"] = search_university_position(abbreviation)
+#                             break
+#                     if data["university"]:
+#                         print("uni:_f", data["university"])
+#                         break
+#
+#     # Если университет не найден
+#     if not data["university"]:
+#         data["university"] = "-"
+#         data["rating"] = "-"
+#
+#     # Поиск специальности
+#     for keyword in specialization_keywords:
+#         if keyword in normalized_block:
+#             match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
+#             if match:
+#                 data["specialization"] = match.group(1).strip()
+#                 break
+#
+#     return data
 
 #=====================================РАНЖИРОВАНИЕ======================================
 
