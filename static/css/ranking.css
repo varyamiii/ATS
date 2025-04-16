@@ -1,3 +1,45 @@
+/* Базовые стили */
+body {
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    padding: 0;
+    background-color: #f8f3ed !important;
+    color: #333;
+    line-height: 1.6;
+    position: relative;
+}
+body::before {
+    content: '';
+    position: fixed; /* Фиксируем фон */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://avatars.mds.yandex.net/get-mpic/7501941/img_id365279432869502246.jpeg/orig"); /* Путь к изображению */
+    background-size: cover; /* Масштабируем изображение */
+    background-position: center; /* Центрируем изображение */
+    background-repeat: no-repeat; /* Запрещаем повторение */
+    opacity: 0.2; /* Прозрачность изображения (50%) */
+    z-index: -1; /* Размещаем под содержимым страницы */
+}
+/* Заголовок */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 3em;
+    color: #731110;
+}
+h2 {
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    margin-left: 160px; /* Отступ слева */
+    color: var(--text-color);
+}
 /* ranking.css */
 .ranking-container {
     max-width: 1200px;
@@ -15,13 +57,26 @@
     justify-content: space-between;
     align-items: center;
     gap: 30px;
+    max-width: 1500px; /* Уменьшаем ширину карточки */
+    margin: auto; /* Выравниваем по центру */
 }
 
 .candidate-info {
     flex-grow: 1;
     min-width: 300px;
 }
-
+/* Стиль для заголовка "Должность" */
+.position-title {
+    text-align: left; /* Выравниваем текст по центру */
+    margin-left: 180px; /* Отступ слева */
+    font-size: 1.5em; /* Увеличиваем размер текста */
+    color: #333; /* Цвет текста */
+    margin-top: 20px; /* Отступ сверху */
+    margin-bottom: 30px; /* Отступ снизу */
+    font-weight: 600; /* Делаем текст полужирным */
+    letter-spacing: 0.5px; /* Добавляем межбуквенное расстояние */
+}
+/* Стиль для контейнера соответствия требованиям */
 .compliance-wrapper {
     background: #f8f9fa;
     border-radius: 8px;
@@ -29,25 +84,63 @@
     text-align: center;
 }
 
-.compliance-percent {
-    font-size: 32px;
-    color: #2ecc71;
-    font-weight: 700;
-    line-height: 1;
+/* Стиль для текста "Соответствие требованиям" */
+.compliance-label {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 10px;
+    display: block;
 }
 
+/* Стиль для полосы прогресса */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #731110; /* Цвет, как у заголовка */
+    width: 0%; /* Начальное значение */
+    transition: width 0.5s ease-in-out; /* Плавная анимация */
+}
+
+/* Стиль для процентного значения */
+.compliance-percent {
+    font-size: 1.2em;
+    color: #731110; /* Цвет, как у заголовка */
+    font-weight: 700;
+    margin-top: 5px;
+    display: block;
+}
+/* Стиль для кнопки "Вернуться" */
 .back-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 12px 25px;
     margin-bottom: 30px;
-    background: #3498db;
+    background-color: #731110;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    margin-left: auto; /* Выравнивание по правому краю */
+    margin-right: auto; /* Центрирование */
+    text-align: center; /* Выравнивание текста внутри кнопки */
+}
+
+/* Анимация при наведении */
+.back-button:hover {
+    background-color: #470b0a; /* Темнее цвет фона */
+    transform: scale(1.05); /* Небольшое увеличение */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Добавляем тень */
 }
 
 .meta-value {
@@ -57,7 +150,7 @@
 .view-resume {
     font-size: 1.1em;
     padding: 14px 30px;
-    background: #3498db;
+    background:#205237;
     color: white !important;
     border-radius: 6px;
     text-decoration: none;
@@ -67,4 +160,134 @@
 .view-resume:hover {
     transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(52, 152, 219, 0.3);
+}
+
+.modal {
+    display: none; /* По умолчанию скрыто */
+    background-color: rgba(115, 17, 16, 0.8); /* Полупрозрачный фон */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 5px;
+}
+
+/* Кнопка "Контакты" */
+.contacts-button {
+    font-size: 1em;
+    padding: 12px 25px;
+    background-color: #731110; /* Цвет, как у заголовка */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contacts-button:hover {
+    background-color: #470b0a; /* Темнее цвет фона */
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Модальное окно */
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 5px;
+    border: 2px solid #731110; /* Цвет, как у заголовка */
+}
+
+/* Закрытие модального окна */
+.close {
+    color: #731110; /* Цвет, как у заголовка */
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #470b0a; /* Темнее цвет фона */
+    text-decoration: none;
+}
+/* Контейнер для кнопки выбора топ N */
+.top-selector {
+    position: fixed;
+    top: 75px;
+    right: 80px;
+    display: flex;
+    align-items: center; /* Выравнивание по центру по вертикали */
+    gap: 10px; /* Расстояние между элементами */
+    z-index: 1000;
+}
+
+/* Поле ввода числа */
+#top-count {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    height: 36px; /* Фиксированная высота для выравнивания */
+    box-sizing: border-box; /* Учитываем padding в высоте */
+}
+
+/* Кнопка "Выделить" */
+.top-button {
+    font-size: 1em;
+    padding: 8px 15px;
+    background-color: #205237; /* Цвет фона */
+    color: white; /* Цвет текста */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 36px; /* Фиксированная высота для выравнивания */
+    display: flex; /* Используем flex для центрирования текста */
+    align-items: center; /* Выравнивание текста по центру */
+    justify-content: center; /* Горизонтальное центрирование текста */
+}
+
+.top-button:hover {
+    background-color: #7a846b; /* Темнее цвет фона */
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Стиль для слова "Топ" */
+.top-label {
+    font-size: 1.5em; /* Увеличенный размер текста */
+    font-weight: bold; /* Жирный шрифт */
+    color: #333; /* Цвет текста */
+    margin-right: 10px; /* Отступ справа */
+    line-height: 1; /* Корректировка высоты строки */
+}
+
+/* Стиль для выделенных карточек */
+.candidate-card.highlighted {
+    border: 2px solid #731110; /* Цвет выделения */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Тень */
+}
+.modal {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal.open {
+    display: block;
+    opacity: 1;
+}
+
+iframe {
+    width: 100%;
+    height: 100%; /* Занимает всю высоту родительского контейнера */
+    border: none;
 }

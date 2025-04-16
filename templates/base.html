@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <title>Система отбора резюме</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <style>
@@ -33,40 +34,55 @@
             //color: #555;
         }
 
-        /* Стили для прогресс-бара */
-        .progress-container {
-            width: 100%;
-            background-color: #f3f3f3;
-            border-radius: 5px;
-            margin-top: 10px;
-            height: 20px;
-        }
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background-color: #4caf50;
-            border-radius: 5px;
-            text-align: center;
-            line-height: 20px;
-            color: white;
-        }
+        /* Стили для контейнера прогресс-бара */
+.progress-container {
+    max-width: 500px; /* Ограничение ширины */
+    margin-left: 250px;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    margin-top: 10px;
+    height: 24px; /* Немного увеличиваем высоту для лучшей видимости */
+    overflow: hidden; /* Обрезаем содержимое за пределами контейнера */
+}
+
+/* Стили для самой полосы прогресса */
+.progress-bar {
+    width: 0%; /* Начальная ширина */
+    height: 100%; /* Занимает всю высоту контейнера */
+    background-color: #731110; /* Цвет прогресса */
+    border-radius: 5px; /* Скругление углов */
+    text-align: center; /* Текст по центру */
+    line-height: 24px; /* Высота строки соответствует высоте контейнера */
+    color: white; /* Цвет текста */
+    font-size: 14px; /* Размер текста */
+    transition: width 0.3s ease; /* Плавная анимация изменения ширины */
+}
     </style>
 </head>
 <body>
-    <h1>Система отбора резюме</h1>
-    <div class="container">
+<div class="bracket-box2">
+    Система отбора резюме
+</div>
+
+
+<div class="filters-layout">
+<div class="main-container2">
         <!-- Левая панель: Форма фильтров -->
-        <div class="left-panel">
-            <h2>Фильтры</h2>
+<div class="left-panel">
+<!--            <h2>Фильтры</h2>-->
             <form id="filter-form">
                 <!-- Должность -->
-                <div class="form-group">
+                <div class="filter-box position-box" style="top: 10%; left: 5%;">
                     <label>Должность:</label>
                     <input type="text" id="position" placeholder="Введите должность">
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                 </div>
                 <!-- Уровень компетентности -->
-                <div class="form-group">
+                <div class="filter-box competency-box" style="top: 40%; left: 5%;">
                     <label for="competency_level">Уровень компетентности:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                     <select id="competency_level" name="competency_level">
                         <option value="">Выберите уровень</option>
                         <option value="Intern">Intern</option>
@@ -76,8 +92,10 @@
                     </select>
                 </div>
                 <!-- Тип занятости -->
-                <div class="form-group">
+                <div class="filter-box employment-box" style="top: 10%; left: 29%;">
                     <label for="employment_type">Тип занятости:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                     <select id="employment_type" name="employment_type">
                         <option value="">Выберите тип</option>
                         <option value="Полная занятость">Полная занятость</option>
@@ -87,8 +105,10 @@
                     </select>
                 </div>
                 <!-- Образование -->
-                <div class="form-group custom-dropdown">
+                <div class="filter-box education-box" style="top: 70%; left: 29%;">
                     <label>Образование:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                     <div class="dropdown">
                         <button class="dropbtn education-btn" type="button">
                             Выберите уровни
@@ -103,17 +123,21 @@
                     </div>
                 </div>
                 <!-- Опыт работы -->
-                <div class="form-group">
+                <div class="filter-box experience-box" style="top: 70%; left: 5%;">
                     <label>Опыт работы:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                     <input type="number" id="experience" min="0" max="50" step="1" value="0">
                     <span class="counter-label">лет</span>
                 </div>
                 <!-- Ключевые навыки -->
-                <div class="form-group custom-dropdown">
+                <div class="filter-box skills-box" style="top: 7%; left: 77%;">
                     <label>Ключевые навыки:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+
                     <div class="dropdown">
                         <button class="dropbtn skills-btn" type="button">
-                            Выберите навыки
+                            <span class="btn-text">Выберите навыки</span>
                         </button>
                         <div class="dropdown-content">
                             <label><input type="checkbox" name="skills" value="Python">Python</label>
@@ -149,7 +173,6 @@
                             <label><input type="checkbox" name="skills" value="ML">ML</label>
                             <label><input type="checkbox" name="skills" value="NLP">NLP</label>
                             <label><input type="checkbox" name="skills" value="Blockchain">Blockchain</label>
-
                             <label><input type="checkbox" name="skills" value="DevOps">DevOps</label>
                             <label><input type="checkbox" name="skills" value="API">API</label>
                         </div>
@@ -157,8 +180,9 @@
                     </div>
                 </div>
                 <!-- Уровень английского -->
-                <div class="form-group custom-dropdown">
+                <div class="filter-box english-box" style="top: 40%; left: 29%;">
                     <label>Уровень английского:</label>
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
                     <div class="dropdown">
                         <button class="dropbtn english-btn" type="button">
                             Выберите уровни
@@ -176,37 +200,54 @@
                     </div>
                 </div>
                 <!-- Особые требования -->
-                <div class="form-group">
+                <div class="filter-box requirements-box" style="top: 7%; left: 52%;">
                     <label>Особые требования:</label>
-                    <input type="text" id="special_requirements" placeholder="Дополнительные условия">
+                    <img src="https://avatars.mds.yandex.net/i?id=241b8431116996168c7169d882f6079c_l-4373853-images-thumbs&n=13" alt="Icon" class="box-icon">
+                    <textarea id="special_requirements" placeholder="Дополнительные условия"></textarea>
+                        <!-- Подсказка -->
+                        <div class="tooltip">Это может быть Excel, PowerPoint и т.д.</div>
                 </div>
+                <div class="filter-box requirements-box2" style="top: 81%; left: 65%;">
                 <button type="submit">Применить фильтры</button>
                 <button type="reset" id="reset-filters">Сброс</button>
+                </div>
             </form>
-        </div>
+</div>
         <!-- Правая панель: Загрузка резюме и результаты -->
-        <div class="right-panel">
-            <h2>Загрузка резюме</h2>
-            <div class="upload-section">
-                <label for="resume-upload">Загрузите PDF-файлы:</label>
+<div class="right-panel">
+        <div class="bracket-box">
+        <h2>Загрузка резюме</h2>
+    </div>
+        <div class="upload-section">
+            <label class="custom-file-upload">
+                Выбрать файлы
                 <input type="file" id="resume-upload" multiple accept=".pdf">
-                <div class="progress-container">
-                    <div id="progress-bar" class="progress-bar"></div>
-                </div>
-                <div class="uploaded-files">
-                    <h3>Загруженные файлы:</h3>
-                    <ul id="uploaded-files-list"></ul>
-                </div>
-            </div>
-            <div class="results-section">
-                <h2>Результаты отбора</h2>
-                <button id="show-ranking" class="ranking-btn">Показать рейтинг кандидатов</button>
-                <ul id="results-list">
-                    <!-- Результаты анализа будут здесь -->
-                </ul>
+            </label>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
             </div>
         </div>
+
+        <div class="uploaded-files">
+<!--            <h3>Загруженные файлы:</h3>-->
+            <ul id="uploaded-files-list"></ul>
+        </div>
+
+            <div class="bracket-box red">
+            <h2>Результаты отбора</h2>
+        </div>
+            <button id="show-ranking" class="ranking-btn">Показать рейтинг кандидатов</button>
+            <ul id="results-list">
+                <!-- Результаты анализа будут здесь -->
+            </ul>
+
+
+
+</div>
     </div>
+</div>
+</div>
+    <div class="particles-container"></div>
     <script>
         // Обработчик для кнопки "Показать рейтинг кандидатов"
         document.getElementById('show-ranking').addEventListener('click', () => {
@@ -246,7 +287,14 @@
                 }
             });
         });
-
+// Закрытие всех выпадающих списков при клике вне
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown-content') && !e.target.classList.contains('dropbtn')) {
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        }
+    });
         // Отправка данных на сервер через AJAX
         document.getElementById('filter-form').addEventListener('submit', function (event) {
             event.preventDefault(); // Предотвращаем стандартное поведение формы
@@ -294,48 +342,129 @@
         });
 
         // Обработка загрузки файлов
-        document.getElementById('resume-upload').addEventListener('change', async function (event) {
-            const files = event.target.files;
-            if (!files.length) return;
+        // Обработка загрузки файлов
+document.getElementById('resume-upload').addEventListener('change', function (event) {
+    const files = event.target.files;
+    if (!files.length) return;
 
-            const progressBar = document.getElementById('progress-bar');
-            const uploadedFilesList = document.getElementById('uploaded-files-list');
-            uploadedFilesList.innerHTML = ''; // Очищаем список загруженных файлов
+    const progressBar = document.getElementById('progress-bar');
+    const uploadedFilesList = document.getElementById('uploaded-files-list');
+    uploadedFilesList.innerHTML = ''; // Очищаем список загруженных файлов
 
-            const formData = new FormData();
-            for (const file of files) {
-                formData.append('files', file);
-            }
+    const formData = new FormData();
+    for (const file of files) {
+        formData.append('files', file);
+    }
 
-            try {
-                // Отправляем файлы на сервер
-                const response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
+    // Используем XMLHttpRequest для отслеживания прогресса
+    const xhr = new XMLHttpRequest();
+
+    // Отслеживание прогресса загрузки
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            const percent = (e.loaded / e.total) * 100;
+            progressBar.style.width = `${percent}%`;
+            progressBar.textContent = `${Math.round(percent)}%`;
+        }
+    });
+
+    // Обработка успешного завершения загрузки
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const result = JSON.parse(xhr.responseText);
+
+            // Обновляем интерфейс
+            if (result.results) {
+                result.results.forEach(fileResult => {
+                    const li = document.createElement('li');
+                    li.textContent = `${fileResult.filename}: ${fileResult.status} - ${fileResult.message}`;
+                    uploadedFilesList.appendChild(li);
                 });
-
-                const result = await response.json();
-
-
-                // Обновляем интерфейс
-                if (result.results) {
-                    result.results.forEach(fileResult => {
-                        const li = document.createElement('li');
-                        li.textContent = `${fileResult.filename}: ${fileResult.status} - ${fileResult.message}`;
-                        uploadedFilesList.appendChild(li);
-                    });
-                }
-
-                alert('Файлы успешно загружены!');
-            } catch (error) {
-                console.error('Ошибка при загрузке файлов:', error);
-                alert('Произошла ошибка при загрузке файлов.');
-            } finally {
-                // Сбрасываем прогресс-бар
-                progressBar.style.width = '0%';
-                progressBar.textContent = '';
             }
-        });
+
+            alert('Файлы успешно загружены!');
+        } else {
+            alert('Произошла ошибка при загрузке.');
+        }
+
+        // Сбрасываем прогресс-бар
+        progressBar.style.width = '0%';
+        progressBar.textContent = '';
+    };
+
+    // Обработка ошибок сети
+    xhr.onerror = function () {
+        console.error('Ошибка сети');
+        alert('Произошла ошибка при загрузке файлов.');
+        progressBar.style.width = '0%';
+        progressBar.textContent = '';
+    };
+
+    // Отправка данных на сервер
+    xhr.open('POST', '/upload');
+    xhr.send(formData);
+});
     </script>
+<script>
+    // Обработчик кнопки "Сброс"
+    document.getElementById('reset-filters')?.addEventListener('click', () => {
+        // Сброс чекбоксов
+        document.querySelectorAll('.dropdown-content input').forEach(input => {
+            input.checked = false;
+        });
+
+        // Сброс текста на всех кнопках выпадающих списков
+        document.querySelectorAll('.dropbtn').forEach(btn => {
+            btn.textContent = 'Выберите';
+        });
+
+        // Сброс блока с выбранными значениями
+        document.querySelectorAll('.selected-display').forEach(display => {
+            display.textContent = '';
+        });
+
+        // Сброс других полей формы
+        document.getElementById('position').value = '';
+        document.getElementById('competency_level').value = '';
+        document.getElementById('employment_type').value = '';
+        document.getElementById('experience').value = '0';
+        document.getElementById('special_requirements').value = '';
+    });
+</script>
+<script>
+// Логика для плавающей плашки
+document.getElementById('floatingBox').addEventListener('click', () => {
+    const floatingBox = document.getElementById('floatingBox');
+    floatingBox.classList.toggle('active'); // Переключаем класс active
+});
+</script>
+   <script>
+// Получаем элементы
+const tooltipContainer = document.querySelector('.tooltip-container');
+const filters = document.querySelectorAll('.filter-box');
+
+// Массив с текстами подсказок
+const tooltips = [
+    "Давай подберем кандидата!",
+    "Загрузи резюме — и мы сделаем остальное!",
+    "Чем больше данных, тем точнее подбор 🔍",
+    "Не знаешь, что выбрать? Начни с должности и опыта",
+    "Подбор без рутины — только релевантные кандидаты!"
+];
+
+// Обработчик события наведения
+filters.forEach((filter, index) => {
+    filter.addEventListener('mouseenter', () => {
+        // Показываем диалоговое окно
+        tooltipContainer.textContent = tooltips[index % tooltips.length];
+        tooltipContainer.classList.add('show');
+    });
+
+    filter.addEventListener('mouseleave', () => {
+        // Скрываем диалоговое окно
+        tooltipContainer.classList.remove('show');
+    });
+});
+   </script>
 </body>
 </html>

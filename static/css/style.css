@@ -1,37 +1,542 @@
 /* Общие стили */
 body {
-    font-family: Arial, sans-serif;
+font-size: 16px; /* Базовый размер шрифта */
+    font-family: 'Roboto', sans-serif; /* Применяем Roboto */
+    font-weight: 400; /* Явно указываем вес шрифта (Regular) */
     margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 20px;
+    min-height: 100vh; /* Занимает всю высоту окна браузера */
+    padding: 40;
+    background-color: #f8f3ed !important; /* Светлый фон */
     color: #333;
+    gap: 40px; /* Расстояние между панелями */
+    line-height: 1.6;
+    display: flex;
+    margin-top: 50px; /* Отступ сверху для `.floating-box` */
+    flex-direction: column;
+    position: relative; /* Для позиционирования псевдоэлемента */
+    /* overflow: hidden; Убираем это свойство */
 }
 
+/* Псевдоэлемент для фонового изображения */
+body::before {
+    content: '';
+    position: fixed; /* Фиксируем фон */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://avatars.mds.yandex.net/get-mpic/7501941/img_id365279432869502246.jpeg/orig"); /* Путь к изображению */
+    background-size: cover; /* Масштабируем изображение */
+    background-position: center; /* Центрируем изображение */
+    background-repeat: no-repeat; /* Запрещаем повторение */
+    opacity: 0.2; /* Прозрачность изображения (50%) */
+    z-index: -1; /* Размещаем под содержимым страницы */
+}
+/* Основной контейнер */
+.main-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Соотношение 2:1 */
+    gap: 20px; /* Расстояние между панелями */
+    padding: 20px;
+    max-width: 1200px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центрирование контейнера */
+}
+
+/* Стили для заголовка */
+h1 {
+    position: absolute;
+    top: 80%;
+    left: 87%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1; /* Чтобы картинка была выше других элементов */
+}
+h2 {
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1; /* Чтобы картинка была выше других элементов */
+}
+h3 {
+    text-align: center;
+    z-index: 1; /* Чтобы картинка была выше других элементов */
+}
+/* Стили для SVG */
+h1 svg {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Стили для изображения */
+h1 svg image {
+    border-radius: 50%; /* Делаем изображение круглым */
+    object-fit: cover; /* Корректное масштабирование изображения */
+}
+/* Общий контейнер */
 .container {
     display: flex;
-    margin: 20px;
-    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start; /* Выравнивание по верхнему краю */
+    gap: 40px; /* Расстояние между левой и правой панелями */
+}
+/* Стили для контейнера с плашками */
+.filters-layout {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; /* Чтобы плашки были выше картинки */
+}
+/* Общие стили для анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.left-panel,
-.right-panel {
-    background-color: #fff;
-    padding: 20px;
+.filter-box {
+    animation: fadeIn 0.5s ease-in-out;
+}
+/* Стили для контейнера с частицами */
+.particles-container {
+    position: fixed; /* Фиксируем контейнер относительно окна браузера */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Чтобы частицы не мешали взаимодействию */
+    overflow: visible;
+}
+
+/* Стили для частиц */
+.particle {
+    position: absolute;
+    width: 17px; /* Увеличиваем размер частиц */
+    height: 17px; /* Увеличиваем размер частиц */
+    background-color: rgba(115, 17, 16, 0.8); /* Цвет частиц */
+    border-radius: 50%;
+    animation: scatterAway 1s ease-in-out forwards; /* Ускоряем анимацию */
+}
+
+@keyframes scatterAway {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Стили для SVG */
+.connection-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Чтобы SVG не мешал кликам */
+    z-index: 1; /* Чтобы линии были поверх фона, но под плашками */
+}
+
+/* Стили для линий */
+.connection-line {
+    stroke: #731110; /* Цвет линии */
+    stroke-width: 2; /* Толщина линии */
+    fill: none; /* Без заливки */
+}
+
+/* Стили для изображения внутри плашки */
+.box-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Делаем изображение круглым */
+    object-fit: cover; /* Корректное масштабирование */
+    background-color: transparent; /* Убираем фон */
+    z-index: 10;
+}
+
+/* Обновление стилей для плашек */
+.filter-box {
+    position: relative; /* Необходимо для позиционирования изображения */
+    background-color: #ffffff;
+    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    flex: 1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+}
+/* Стили для плавающей плашки */
+/* Контейнер для текста и скобок */
+.bracket-box2 {
+top: -70px;
+    position: relative; /* Для позиционирования псевдоэлементов */
+    text-align: center; /* Выравнивание текста по центру */
+    font-size: 2.5rem; /* Размер текста */
+    font-weight: bold; /* Жирный шрифт */
+    color: #731110; /* Цвет текста */
+    margin: 20px auto; /* Отступы сверху и снизу */
+    padding: 10px 0; /* Внутренние отступы */
+    width: fit-content; /* Ширина подстраивается под содержимое */
+    z-index: 1000; /* Чтобы блок был поверх других элементов */
 }
 
-.left-panel {
+/* Левая скобка */
+.bracket-box2::before {
+
+    position: absolute;
+    left: -20px; /* Отступ слева */
+    top: 90%;
+    transform: translateY(-50%); /* Центрирование по вертикали */
+    font-size: 2em; /* Большой размер скобки */
+    color: #731110; /* Цвет скобки */
+    font-weight: bold;
+}
+
+/* Правая скобка */
+.bracket-box2::after {
+
+    position: absolute;
+    right: -20px; /* Отступ справа */
+    top: 20%;
+    transform: translateY(-50%); /* Центрирование по вертикали */
+    font-size: 2em; /* Большой размер скобки */
+    color: #731110; /* Цвет скобки */
+    font-weight: bold;
+}
+/* Стили для каждой плашки */
+.filter-box {
+    position: absolute; /* Используем абсолютное позиционирование */
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: all 0.3s ease;
+    flex: 1 1 calc(48% - 20px); /* Две плашки в ряд */
+    min-width: 300px; /* Минимальная ширина */
+    max-width: 400px; /* Максимальная ширина */
+    overflow: visible; /* Разрешаем содержимому выходить за границы */
+    z-index: 2; /* Плашки будут выше всего остального */
+}
+
+.filter-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Улучшенные стили для меток */
+.filter-box label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #731110;
+    font-size: 1.3em;
+}
+
+/* Стили для инпутов и селектов */
+.filter-box input,
+.filter-box select {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-box input:focus,
+.filter-box select:focus {
+    border-color: #731110;
+    outline: none;
+}
+/* Стили для квадратной плашки */
+.filter-box.requirements-box,
+.filter-box.skills-box {
+    width: 400px; /* Ширина */
+    height: 400px; /* Высота */
+    display: flex; /* Используем Flexbox для центрирования содержимого */
+    flex-direction: column; /* Располагаем элементы вертикально */
+    justify-content: center; /* Центрируем по вертикали */
+    align-items: center; /* Центрируем по горизонтали */
+    text-align: center; /* Выравнивание текста по центру */
+    padding: 20px; /* Внутренние отступы */
+    box-sizing: border-box; /* Учитываем padding в размерах */
+}
+
+/* Стили для изображения внутри квадратной плашки */
+.filter-box.requirements-box .box-icon,
+.filter-box.skills-box .box-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+/* Стили для textarea (окошко) внутри квадратной плашки */
+.filter-box.requirements-box textarea,
+.filter-box.skills-box textarea,
+ .dropbtn.skills-btn{
+    width: 90%;    /* Ширина 80% от плашки */
+    height: 90%;   /* Высота 80% от плашки */
+    text-align: left;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: none;          /* Запрещаем изменение размера пользователем, можно убрать по необходимости */
+    overflow-y: auto;      /* Скролл по вертикали, если текста много */
+    box-sizing: border-box; /* Чтобы padding учитывался в размере */
+    white-space: pre-wrap;  /* Автоматический перенос строк, учитывая пробелы и символы перевода строки */
+}
+.dropbtn.skills-btn {
+    display: flex;              /* Используем flex-контейнер */
+    align-items: flex-start;    /* Выравнивание по вертикали: вверху */
+    justify-content: flex-start;/* Выравнивание по горизонтали: слева */
+    width: 90%;
+    height: 90%;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    /* Свойство text-align применяется к тексту внутри блока с display: block, но при flex мы контролируем выравнивание через align-items и justify-content */
+}
+.dropbtn.skills-btn {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 90%;
+    height: 90%;
+    margin-top: 10px;
+    padding: 8px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+/* Стили для подсказки внутри квадратной плашки */
+.filter-box.requirements-box .tooltip,
+.filter-box.skills-box .tooltip {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #ffffff;
 }
 
+/* Кнопки действий */
+.actions-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button[type="submit"],
+button[type="reset"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"] {
+    background-color: #731110;
+    color: white;
+}
+
+button[type="reset"] {
+    background-color: #f9fafb;
+    color: #731110;
+    border: 1px solid #731110;
+}
+
+button[type="submit"]:hover {
+    background-color: #470b0a;
+}
+
+button[type="reset"]:hover {
+    background-color: #731110;
+    color: white;
+}
+/* Основной контейнер */
+.main-container2 {
+    display: block; /* Блочная модель */
+    gap: 20px; /* Отступ между панелями */
+    padding: 20px; /* Внутренние отступы */
+    margin: 0 auto; /* Центрирование контейнера */
+    height: 100%; /* Растягиваем на всю высоту */
+    width: 100%; /* Занимает всю ширину страницы */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Левая панель */
+.left-panel {
+    margin-bottom: 20px; /* Отступ снизу */
+    background-color: #ffffff;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Добавляем прокрутку при необходимости */
+    height: 50%; /* Растягиваем на всю высоту */
+    position: relative; /* Для позиционирования разделителя */
+}
+/* Вертикальный разделитель */
+.left-panel::before {
+    content: ''; /* Создаем псевдоэлемент */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 0; /* Начинается сверху */
+    bottom: 0; /* Заканчивается снизу */
+    left: 50%; /* Располагаем по центру */
+    transform: translateX(-50%); /* Центрируем точно по центру */
+    width: 1px; /* Толщина линии */
+    background-image: linear-gradient(to bottom, transparent 50%, #ccc 50%); /* Пунктирная линия */
+    background-size: 1px 10px; /* Размер пунктира */
+    z-index: 1; /* Размещаем поверх содержимого */
+}
+/* Правая панель */
+.right-panel {
+    background-color: #ffffff;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 40%; /* Растягиваем на всю высоту */
+    max-width: 1000px; /* Ограничение ширины */
+    margin-left: 330px;
+}
+/* Стили для правой панели */
+.right-panel {
+    display: flex;
+    flex-direction: column; /* Все элементы друг под другом */
+    gap: 20px; /* Расстояние между колонками */
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 1em; /* Увеличиваем базовый размер текста */
+}
+
+/* Стили для левой колонки (загрузка файлов) */
+.upload-column,
+.results-column {
+    display: flex;
+    flex-direction: column; /* Все элементы в колонке */
+    gap: 15px; /* Расстояние между элементами */
+    align-items: flex-start; /* Выравнивание по левому краю */
+}
+
+/* Улучшение внешнего вида заголовков */
+.upload-column h2,
+.results-column h2 {
+    margin-bottom: 20px;
+    font-size: 1.2em; /* Увеличиваем размер заголовков */
+    color: #731110;
+}
+
+/* Увеличение размера текста для меток */
+.upload-column label,
+.results-column label {
+    font-size: 0.9em; /* Увеличиваем размер меток */
+}
+
+/* Увеличение размера текста для кнопок */
+.upload-column button,
+.results-column button {
+    font-size: 1em; /* Увеличиваем размер текста кнопок */
+}
+
+/* Увеличение размера текста для списков */
+.upload-column ul,
+.results-column ul {
+    font-size: 1em; /* Увеличиваем размер текста элементов списка */
+}
+
+/* Увеличение размера текста для параграфов */
+.upload-column p,
+.results-column p {
+    font-size: 1em; /* Увеличиваем размер текста параграфов */
+}
+/* Контейнер для подсказок */
+/* Стили для диалогового окна */
+.tooltip-container {
+    position: absolute;
+    bottom: 100%; /* Размещаем выше изображения */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #333;
+    padding: 8px 15px; /* Уменьшаем внутренние отступы */
+    border-radius: 50px; /* Делаем овальную форму */
+    font-size: 0.45em; /* Уменьшаем размер текста */
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Добавляем тень для объема */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0; /* Начальная прозрачность */
+    visibility: hidden; /* Скрытая видимость */
+    z-index: 10; /* Размещаем поверх других элементов */
+    width: auto; /* Автоматическая ширина */
+    max-width: 200px; /* Ограничение максимальной ширины */
+    text-align: center; /* Центрируем текст */
+}
+
+/* Показываем диалоговое окно */
+.tooltip-container.show {
+    opacity: 1; /* Делаем видимым */
+    visibility: visible; /* Показываем */
+}
+/* Стрелка для диалогового окна */
+.tooltip-container::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* Положение стрелки */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #fff; /* Цвет стрелки */
+    border-bottom: none;
+}
+/* Стили для подсказки */
+.tooltip {
+    position: absolute;
+    bottom: 100%; /* Расположение над изображением */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8); /* Темный фон с прозрачностью */
+    color: white; /* Белый текст */
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    white-space: nowrap; /* Запрет переноса текста */
+    opacity: 0; /* Начальная прозрачность */
+    visibility: hidden; /* Скрытая видимость */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 10; /* Чтобы подсказка была поверх других элементов */
+}
+
+/* Показываем подсказку при наведении на изображение */
+.filter-box.requirements-box:hover .tooltip {
+    opacity: 1; /* Делаем видимой */
+    visibility: visible; /* Показываем */
+}
+/* Стили для форм */
 .form-group {
     margin-bottom: 15px;
 }
@@ -39,70 +544,48 @@ h1 {
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
+    font-weight: 600;
+    color: #731110; /* Зеленый текст для меток */
+    font-size: 1.2em;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
     box-sizing: border-box;
+    transition: border-color 0.3s ease;
 }
 
-.upload-section {
-    margin-top: 20px;
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #731110; /* Умеренный зеленый при фокусе */
+    outline: none;
 }
 
-.uploaded-files {
-    margin-top: 10px;
+#show-ranking {
+    padding: 12px 20px;
+    background-color: #731110; /* Более светлый зеленый */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    display: block; /* Делаем кнопку блочным элементом */
+    margin: 0 auto; /* Автоматические отступы слева и справа */
+    width: fit-content; /* Кнопка занимает только необходимую ширину */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    align-self: flex-start;
 }
 
-.uploaded-files ul {
-    list-style-type: none;
-    padding: 0;
+#show-ranking:hover {
+    background-color: #470b0a; /* Темно-зеленый при наведении */
+    transform: scale(1.05);
 }
 
-.uploaded-files li {
-    background-color: #e9ecef;
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-}
-
-.right-panel {
-    display: flex;
-    flex-direction: column;
-}
-
-.results-section {
-    margin-top: 20px;
-}
-
-.results-section ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.results-section li {
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-}
-
-.success {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.error {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-/* Кастомные выпадающие списки */
+/* Стили для выпадающих списков */
 .custom-dropdown {
     position: relative;
     margin-bottom: 15px;
@@ -112,25 +595,28 @@ h1 {
     position: relative;
     display: block;
     width: 100%;
+    height: 100%
 }
 
 .dropbtn {
-    background-color: #f1f1f1;
+    background-color: #ffffff;
     color: #333;
-    padding: 8px 12px;
+    padding: 10px 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     width: 100%;
     text-align: left;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
 }
 
 .dropdown-content {
     display: none;
-    position: absolute;
+    position: relative;
     background-color: #f9f9f9;
     width: 100%;
+    top: 100%; /* Располагаем под родителем */
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 4px;
@@ -138,6 +624,7 @@ h1 {
     overflow-y: auto;
     left: 0;
     padding: 8px 0;
+    z-index: 10; /* Высокий z-index */
 }
 
 .dropdown-content label {
@@ -146,7 +633,7 @@ h1 {
     padding: 8px 40px 8px 16px;
     cursor: pointer;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .dropdown-content label:hover {
@@ -163,20 +650,7 @@ h1 {
     height: 16px;
 }
 
-/* Обертка для текста */
-.dropdown-content label span {
-    display: inline-block;
-    width: calc(100% - 30px); /* Оставляет место для чекбокса */
-}
-
-select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 5px 0;
-}
-
+/* Стили для счетчика */
 .counter-container {
     display: flex;
     align-items: center;
@@ -219,31 +693,151 @@ select {
     min-height: 24px;
 }
 
-.show { display: block; }
+/* Стили для загрузки файлов */
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Отступы внутри секции */
+}
 
-/* Дополнительные стили для согласованности */
-button[type="submit"],
-button[type="reset"] {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
+.upload-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 1em;
+}
+
+.upload-section input[type="file"] {
+    display: none; /* Скрываем стандартную кнопку */
+}
+
+/* Увеличиваем специфичность */
+.upload-section .custom-file-upload {
+    max-width: 500px; /* Ограничение ширины */
+    margin-left: 230px;
+    background-color: #205237 !important; /* Цвет фона */
+    color: white !important; /* Белый текст */
+    border-radius: 8px;
     cursor: pointer;
-    margin-right: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+    padding: 12px 20px; /* Добавляем отступы для кнопки */
+    border: none; /* Убираем границу */
 }
 
-button[type="submit"] {
-    background-color: #007bff;
+/* Стиль при наведении */
+.upload-section .custom-file-upload:hover {
+    background-color: #470b0a !important; /* Темнее при наведении */
+    transform: scale(1.05);
+}
+
+.uploaded-files ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.uploaded-files li {
+    background-color: #f2f1ed; /* Светло-зеленый для элементов списка */
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.uploaded-files li:hover {
+    background-color: #f7c2c1; /* Светлее при наведении */
+}
+.custom-file-upload {
+    background-color: #81c784; /* Умеренный зеленый для кнопки загрузки */
     color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
 }
 
-button[type="reset"] {
-    background-color: #ccc;
-    color: #333;
+.custom-file-upload:hover {
+    background-color: #470b0a; /* Темнее при наведении */
+    transform: scale(1.05);
+}
+/* Стили для результатов */
+.results-section {
+    margin-top: 20px;
 }
 
-button[type="submit"]:hover,
-button[type="reset"]:hover {
-    opacity: 0.9;
+.results-section ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.show { display: block; }
+.results-section li {
+    background-color: #e8f5e9; /* Светло-зеленый для результатов */
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.results-section li:hover {
+    background-color: #ecf0f1;
+}
+/* Стили для контейнера с рамочками */
+.bracket-box {
+    position: relative;
+    display: inline-block; /* Чтобы рамочки охватывали только текст */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+/* Переопределение для блока с классом red */
+.bracket-box.red h2 {
+    color: #731110;  /* Либо укажите нужный вам оттенок красного, например, #ff0000 */
+}
+/* Стили для заголовка */
+.bracket-box h2 {
+    font-size: 1.5em; /* Размер текста */
+    color: #205237; /* Цвет текста */
+    text-align: center; /* Выравнивание текста */
+    margin: 0; /* Убираем стандартные отступы */
+    padding: 0 10px; /* Внутренние отступы */
+    font-weight: 600; /* Жирность текста */
+}
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Стили для прогресс-бара */
+.progress-container {
+    width: 100%;
+    background-color: #731110;
+    border-radius: 8px;
+    margin-top: 15px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #731110;
+    border-radius: 8px 0 0 8px;
+    transition: width 0.3s ease;
+}
+
+.show {
+    display: block;
+}
