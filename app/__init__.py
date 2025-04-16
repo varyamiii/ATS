@@ -10,7 +10,7 @@ app = FastAPI()
 app.include_router(router)
 # Монтирование статических файлов
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
+app.mount("/temp_resumes", StaticFiles(directory="temp_resumes"), name="temp_resumes")
 # # Инициализация модели SentenceTransformer
 # model = SentenceTransformer('all-MiniLM-L6-v2')
 

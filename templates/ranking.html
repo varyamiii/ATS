@@ -3,47 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <title>Рейтинг кандидатов</title>
-    <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/ranking.css">
 </head>
 <body>
-    <div class="ranking-container">
+    <div class="container">
+        <!-- Кнопка "Вернуться" -->
         <button onclick="window.history.back()" class="back-button">
             ← Вернуться
         </button>
 
+        <!-- Кнопка выбора топ N -->
+        <div class="top-selector">
+            <label for="top-count">
+                <span class="top-label">Топ - </span>
+            </label>
+            <input type="number" id="top-count" min="1" max="10" value="5" />
+            <button id="select-top" class="top-button">Выделить</button>
+        </div>
+
+        <!-- Заголовок -->
         <h1>Рейтинг кандидатов</h1>
+        <h2>Должность: <span id="position-title">{{ position }}</span></h2>
 
-        <h2>Должность: <span id="position-title"></span></h2>
-
-        <div class="candidate-card">
+        <!-- Карточки кандидатов -->
+        {% for candidate in candidates %}
+        <div class="candidate-card" data-rank="{{ loop.index }}">
             <div class="candidate-info">
                 <div class="meta-row" style="margin-bottom: 15px;">
                     <span class="meta-label">ФИО:</span>
-                    <span class="meta-value">Иванов Иван Иванович</span>
+                    <span class="meta-value">{{ candidate[1] }}</span>
                 </div>
-
                 <div class="compliance-wrapper">
-                    <div class="meta-label" style="margin-bottom: 8px;">
-                        Соответствие требованиям
+                    <div class="meta-label compliance-label">Соответствие требованиям</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ candidate[4] }}%;"></div>
                     </div>
-                    <div class="compliance-percent">
-                        85%
-                    </div>
+                    <div class="compliance-percent">{{ candidate[4] }}%</div>
                 </div>
             </div>
 
-            <a href="#" class="view-resume">
+            <!-- Кнопка "Просмотр резюме" -->
+            <a class="view-resume" href="/view_resume/{{ candidate[0] }}" target="_blank">
                 Просмотр резюме
             </a>
+
+            <!-- Кнопка "Контакты" -->
+            <button class="contacts-button" onclick="openModal('modal-{{ candidate[0] }}')">
+                Контакты
+            </button>
+
+            <!-- Модальное окно для контактов -->
+            <div id="modal-{{ candidate[0] }}" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('modal-{{ candidate[0] }}')">&times;</span>
+                    <h3>Контактная информация</h3>
+                    <p><strong>Телефон:</strong> {{ candidate[2] }}</p>
+                    <p><strong>Email:</strong> {{ candidate[3] }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Модальное окно для просмотра PDF -->
+        <div id="pdf-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('pdf-modal')">&times;</span>
+                <iframe id="pdf-iframe" src="" type="application/pdf" style="width: 100%; height: 80vh; border: none;"></iframe>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const position = urlParams.get('position') || 'Не указана';
-            document.getElementById('position-title').textContent = position;
+        // Тестовое сообщение
+        console.log("JavaScript is working!");
+
+        // Функция для открытия модального окна
+        function openModal(modalId) {
+            console.log(`Открываем модальное окно с ID: ${modalId}`);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = "block";
+            } else {
+                console.error(`Модальное окно с ID "${modalId}" не найдено.`);
+            }
+        }
+
+        // Функция для закрытия модального окна
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = "none";
+                if (modalId === "pdf-modal") {
+                    const iframe = document.getElementById("pdf-iframe");
+                    if (iframe) {
+                        iframe.src = ""; // Очищаем iframe
+                    }
+                }
+            }
+        }
+
+        // Закрытие модального окна при клике вне его области
+        window.onclick = function(event) {
+            if (event.target.classList.contains("modal")) {
+                event.target.style.display = "none";
+                if (event.target.id === "pdf-modal") {
+                    const iframe = document.getElementById("pdf-iframe");
+                    if (iframe) {
+                        iframe.src = ""; // Очищаем iframe
+                    }
+                }
+            }
+        };
+
+        // Функция для открытия модального окна с PDF
+       function openPdfModal(candidateId) {
+        // Убедитесь, что candidateId не пустой
+        if (!candidateId) {
+            console.error("Candidate ID is missing!");
+            return;
+        }
+
+        // Формируем URL для маршрута /view_resume/{candidate_id}
+        const pdfUrl = `/view_resume/${candidateId}`;
+        console.log("openPdfModal called with URL:", pdfUrl);
+
+        const modal = document.getElementById("pdf-modal");
+        const iframe = document.getElementById("pdf-iframe");
+
+        if (!modal || !iframe) {
+            console.error("Modal or Iframe not found!");
+            return;
+        }
+
+        // Устанавливаем источник для iframe
+        iframe.src = pdfUrl;
+        console.log("Iframe source set to:", iframe.src);
+
+        // Отображаем модальное окно
+        modal.classList.add("open");
+        modal.style.display = "block";
+    }
+        // Выбор топ N карточек
+        document.getElementById("select-top").addEventListener("click", function () {
+            const topCount = parseInt(document.getElementById("top-count").value);
+            const candidateCards = document.querySelectorAll(".candidate-card");
+
+            // Убираем выделение у всех карточек
+            candidateCards.forEach(card => card.classList.remove("highlighted"));
+
+            // Выделяем первые N карточек
+            for (let i = 0; i < Math.min(topCount, candidateCards.length); i++) {
+                candidateCards[i].classList.add("highlighted");
+            }
         });
     </script>
 </body>

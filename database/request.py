@@ -15,12 +15,12 @@ DB_CONFIG = {
     'port': (os.getenv('DB_PORT'))  # Без значения по умолчанию
 }
 
-# Проверка загруженных переменных окружения
-print("DB_NAME:", os.getenv('DB_NAME'))
-print("DB_USER:", os.getenv('DB_USER'))
-print("DB_PASSWORD:", os.getenv('DB_PASSWORD'))
-print("DB_HOST:", os.getenv('DB_HOST'))
-print("DB_PORT:", os.getenv('DB_PORT'))
+# # Проверка загруженных переменных окружения
+# print("DB_NAME:", os.getenv('DB_NAME'))
+# print("DB_USER:", os.getenv('DB_USER'))
+# print("DB_PASSWORD:", os.getenv('DB_PASSWORD'))
+# print("DB_HOST:", os.getenv('DB_HOST'))
+# print("DB_PORT:", os.getenv('DB_PORT'))
 
 
 class DatabaseHandler:
@@ -85,41 +85,60 @@ class DatabaseHandler:
             print(f"Ошибка при добавлении кандидата: {e}")
             raise
 
+    def get_candidates_by_similarity(self):
+        """
+        Возвращает список кандидатов, отсортированных по убыванию значения столбца similarity.
+        """
+        query = """
+            SELECT id, full_name, phone, email, similarity
+            FROM candidates
+            ORDER BY similarity DESC;
+        """
+
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(query)
+                candidates = cursor.fetchall()
+                return candidates  # Список кортежей: (id, full_name, phone, email, similarity)
+        except Exception as e:
+            print(f"Ошибка при получении данных кандидатов: {e}")
+            return []
+
 #=================================Считывание бинарного файла в PDF из БД================
 
-# def fetch_resume(candidate_id, output_path):
-#     try:
-#         # Подключение к базе данных
-#         connection = psycopg2.connect(**DB_CONFIG)
-#         cursor = connection.cursor()
-#
-#         # Выполнение запроса для получения PDF-файла
-#         query = "SELECT resume FROM candidates WHERE id = %s"
-#         cursor.execute(query, (candidate_id,))
-#         result = cursor.fetchone()
-#
-#         if result and result[0]:
-#             # Извлечение бинарных данных
-#             resume_data = result[0]
-#
-#             # Сохранение данных в файл
-#             with open(output_path, "wb") as file:
-#                 file.write(resume_data)
-#
-#             print(f"PDF-файл успешно сохранен: {output_path}")
-#         else:
-#             print("Резюме не найдено для данного ID.")
-#
-#     except Exception as e:
-#         print(f"Ошибка при извлечении резюме: {e}")
-#
-#     finally:
-#         # Закрытие соединения
-#         if cursor:
-#             cursor.close()
-#         if connection:
-#             connection.close()
-#
+def fetch_resume(candidate_id, output_path):
+    try:
+        # Подключение к базе данных
+        connection = psycopg2.connect(**DB_CONFIG)
+        cursor = connection.cursor()
+
+        # Выполнение запроса для получения PDF-файла
+        query = "SELECT resume FROM candidates WHERE id = %s"
+        cursor.execute(query, (candidate_id,))
+        result = cursor.fetchone()
+
+        if result and result[0]:
+            # Извлечение бинарных данных
+            resume_data = result[0]
+
+            # Сохранение данных в файл
+            with open(output_path, "wb") as file:
+                file.write(resume_data)
+
+            print(f"PDF-файл успешно сохранен: {output_path}")
+        else:
+            print("Резюме не найдено для данного ID.")
+
+    except Exception as e:
+        print(f"Ошибка при извлечении резюме: {e}")
+
+    finally:
+        # Закрытие соединения
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
 # # Пример использования
 # candidate_id = 1  # ID кандидата
 # output_path = "downloaded_resume.pdf"  # Путь для сохранения файла

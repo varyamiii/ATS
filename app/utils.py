@@ -438,4 +438,50 @@ def load_universities(file_path: str) -> Dict[str, str]:
 #     return data
 
 #=====================================РАНЖИРОВАНИЕ======================================
-
+#
+# <<<<<<< HEAD
+# =======
+#     # Приводим текст к нижнему регистру
+#     education_block = education_block.lower()
+#     # Проверяем, начинается ли блок с ключевого слова "образование"
+#     if  education_block.startswith("образование"):
+#         # return data  # Если ключевого слова нет, возвращаем пустые данные
+#
+#         # Нормализуем текст
+#         normalized_block = normalize_name(education_block)
+#         print("Norm :",normalized_block)
+#         # Поиск университета
+#         for keyword in university_keywords:
+#             if keyword in normalized_block:
+#                 # Ищем подстроку, содержащую название университета
+#                 match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
+#                 if match:
+#                     university_candidate = match.group(1).strip()
+#                     # Проверяем, есть ли найденный университет в списке
+#                     for abbreviation, full_name in universities.items():
+#                         if (normalize_name(abbreviation) in normalize_name(university_candidate) or
+#                                 normalize_name(full_name) in normalize_name(university_candidate)):
+#                             print("uni:",data["university"])
+#                             data["university"] = full_name
+#                             data["rating"] = search_university_position(abbreviation)
+#                             break
+#                     if data["university"]:
+#                         print("uni:_f", data["university"])
+#                         break
+#
+#     # Если университет не найден
+#     if not data["university"]:
+#         data["university"] = "-"
+#         data["rating"] = "-"
+#
+#     # Поиск специальности
+#     for keyword in specialization_keywords:
+#         if keyword in normalized_block:
+#             match = re.search(rf"\b{keyword}\b.*?([^\n]+)", normalized_block)
+#             if match:
+#                 data["specialization"] = match.group(1).strip()
+#                 break
+#
+#     return data
+# print("colab")
+# >>>>>>> origin/feature/text_processing_resume
