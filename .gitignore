@@ -1,1 +1,18 @@
+# Ignore inner repo
+lib/
+
+# Кэш Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+**/__pycache__/
+
+# Виртуальные окружения
+.venv/
+env/
+.env/
+venv/
+# Секретные переменные
 .env
+*.env
